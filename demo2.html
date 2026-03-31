@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Каталог Мини-Апп — Yusupov Production</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f5f7fa;--card:#fff;--border:#e5e7eb;
+  --text:#111827;--muted:#6b7280;
+  --yp:#16a34a;--yp-dark:#0d3d1e;--yp-light:#dcfce7;
+  --blue:#2563eb;--purple:#7c3aed;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);}
+
+/* HEADER */
+.hdr{background:#fff;border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;}
+.hdr-logo{display:flex;align-items:center;gap:10px;}
+.hdr-logo img{width:36px;height:36px;border-radius:7px;}
+.logo-t{font-size:.9rem;font-weight:700;}
+.logo-s{font-size:.65rem;color:var(--muted);}
+.hdr-back{color:var(--muted);text-decoration:none;font-size:.85rem;display:flex;align-items:center;gap:5px;}
+.hdr-back:hover{color:var(--text);}
+
+/* HERO */
+.hero{background:#fff;border-bottom:1px solid var(--border);padding:48px 40px;}
+.hero-inner{max-width:1100px;margin:0 auto;}
+.case-badge{display:inline-flex;align-items:center;gap:8px;background:var(--yp-light);border:1px solid #86efac;border-radius:20px;padding:5px 14px;font-size:.76rem;color:var(--yp);font-weight:600;margin-bottom:16px;}
+.hero h1{font-size:2.2rem;font-weight:800;margin-bottom:10px;line-height:1.2;}
+.hero h1 span{color:var(--yp);}
+.hero-p{font-size:.95rem;color:var(--muted);max-width:520px;line-height:1.7;margin-bottom:28px;}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.htag{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:6px 14px;font-size:.82rem;font-weight:500;}
+
+/* PHONES SHOWCASE */
+.showcase{padding:60px 40px;background:var(--bg);}
+.showcase-inner{max-width:1200px;margin:0 auto;}
+.sec-title{font-size:1.3rem;font-weight:700;margin-bottom:4px;text-align:center;}
+.sec-sub{font-size:.88rem;color:var(--muted);text-align:center;margin-bottom:44px;}
+
+.phones-row{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;}
+.phone-col{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.phone-lbl{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.phone-badge{font-size:.68rem;background:var(--yp-light);color:var(--yp);border-radius:12px;padding:2px 10px;font-weight:600;}
+
+/* PHONE FRAME */
+.ph{background:#1c1c1e;border-radius:40px;padding:10px;box-shadow:0 20px 50px rgba(0,0,0,.28),0 0 0 1px #3a3a3c;width:220px;}
+.ph-inner{background:#fff;border-radius:30px;overflow:hidden;height:460px;display:flex;flex-direction:column;}
+
+/* STATUS BAR */
+.sb{background:#fff;padding:8px 14px 4px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.sb-time{font-size:.72rem;font-weight:700;color:#111;}
+.sb-icons{font-size:.52rem;color:#333;display:flex;align-items:center;gap:3px;}
+.batt{background:#111;border-radius:2px;padding:1px 3px;color:#fff;font-size:.52rem;}
+
+/* APP BAR */
+.app-bar{padding:5px 12px 7px;display:flex;align-items:center;border-bottom:1px solid #f0f0f0;flex-shrink:0;}
+.ab-back{font-size:1.2rem;color:#007aff;width:22px;}
+.ab-title{font-size:.82rem;font-weight:700;color:#111;flex:1;text-align:center;}
+.ab-close{font-size:.9rem;color:#999;width:22px;text-align:right;}
+
+/* SCROLL AREA */
+.ph-body{flex:1;overflow-y:auto;}
+.ph-body::-webkit-scrollbar{display:none;}
+
+/* BOTTOM NAV */
+.ph-nav{display:flex;border-top:1px solid #f0f0f0;background:#fff;flex-shrink:0;}
+.pni{flex:1;padding:6px 2px 4px;text-align:center;}
+.pni-ico{font-size:.95rem;display:block;line-height:1.3;}
+.pni-lbl{font-size:.52rem;color:#999;display:block;}
+.pni.on .pni-lbl{color:var(--yp);font-weight:700;}
+.pni.on-b .pni-lbl{color:var(--purple);font-weight:700;}
+.pni.on-bl .pni-lbl{color:var(--blue);font-weight:700;}
+
+/* ── SCREEN 1: CATALOG ── */
+.s1-filters{display:flex;gap:5px;padding:8px 10px 5px;overflow-x:auto;flex-shrink:0;border-bottom:1px solid #f0f0f0;}
+.s1-filters::-webkit-scrollbar{display:none;}
+.fpill{background:#f3f4f6;border:none;border-radius:14px;padding:4px 10px;font-size:.66rem;cursor:pointer;white-space:nowrap;font-family:inherit;}
+.fpill.on{background:var(--yp);color:#fff;}
+.s1-search{padding:7px 10px 0;flex-shrink:0;}
+.s1-si{width:100%;background:#f3f4f6;border:none;border-radius:8px;padding:6px 10px;font-size:.72rem;color:#888;font-family:inherit;}
+.s1-list{padding:8px 10px;}
+.s1-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px;margin-bottom:7px;display:flex;gap:8px;cursor:pointer;transition:box-shadow .15s;}
+.s1-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.1);}
+.s1-ico{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.ico-g{background:#dcfce7;}.ico-b{background:#dbeafe;}.ico-p{background:#ede9fe;}.ico-a{background:#fef3c7;}
+.s1-name{font-size:.74rem;font-weight:600;margin-bottom:1px;}
+.s1-d{font-size:.63rem;color:var(--muted);margin-bottom:2px;}
+.s1-price{font-size:.76rem;font-weight:700;color:var(--yp);}
+.s1-sub{font-size:.58rem;color:#bbb;}
+
+/* ── SCREEN 2: DETAIL ── */
+.s2-img{height:110px;background:linear-gradient(135deg,#071d0d,#1a6b3a);display:flex;align-items:center;justify-content:center;font-size:3rem;flex-shrink:0;}
+.s2-body{padding:12px;}
+.s2-badge{display:inline-block;background:var(--yp-light);color:var(--yp);border-radius:6px;padding:2px 9px;font-size:.64rem;font-weight:700;margin-bottom:7px;}
+.s2-title{font-size:.92rem;font-weight:800;margin-bottom:6px;line-height:1.3;}
+.s2-meta{display:flex;gap:8px;margin-bottom:10px;}
+.s2-m{font-size:.66rem;color:var(--muted);display:flex;align-items:center;gap:4px;}
+.s2-desc{font-size:.72rem;color:#555;line-height:1.6;margin-bottom:12px;}
+.s2-section-lbl{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px;}
+.s2-slots{display:flex;flex-direction:column;gap:5px;}
+.s2-slot{display:flex;align-items:center;justify-content:space-between;background:#f9fafb;border-radius:9px;padding:8px 10px;}
+.s2-slot-date{font-size:.76rem;font-weight:600;}
+.s2-slot-info{font-size:.63rem;color:var(--yp);margin-top:1px;}
+.s2-slot-price{font-size:.8rem;font-weight:700;}
+.s2-btn{width:100%;background:var(--yp);color:#fff;border:none;border-radius:9px;padding:10px;font-size:.82rem;font-weight:600;cursor:pointer;margin-top:10px;}
+
+/* ── SCREEN 3: BONUSES ── */
+.s3-card{margin:10px;border-radius:14px;padding:16px;color:#fff;background:linear-gradient(135deg,#4c1d95,#7c3aed);position:relative;overflow:hidden;flex-shrink:0;}
+.s3-card::after{content:'★';position:absolute;right:10px;bottom:-10px;font-size:4rem;opacity:.1;}
+.s3-warn{background:rgba(255,255,255,.15);border-radius:8px;padding:6px 10px;font-size:.65rem;margin-top:10px;display:flex;align-items:center;gap:6px;}
+.s3-bal{font-size:1.5rem;font-weight:800;margin-top:4px;}
+.s3-bal-l{font-size:.63rem;opacity:.75;}
+.s3-hist{padding:0 10px;overflow-y:auto;flex:1;}
+.s3-lbl{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:8px 0 4px;}
+.s3-row{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid #f3f4f6;font-size:.72rem;gap:7px;}
+.s3-pts{font-weight:700;margin-left:auto;}
+.s3p{color:#16a34a;}.s3m{color:#dc2626;}
+.s3-dt{font-size:.6rem;color:#bbb;}
+
+/* ── SCREEN 4: PROFILE ── */
+.s4-head{padding:12px 12px 8px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f0f0;flex-shrink:0;}
+.s4-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d3d1e,#16a34a);display:flex;align-items:center;justify-content:center;color:#7ecfa8;font-size:.82rem;font-weight:800;flex-shrink:0;}
+.s4-name{font-size:.84rem;font-weight:700;}
+.s4-phone{font-size:.68rem;color:var(--muted);}
+.s4-loc{font-size:.64rem;color:var(--muted);display:flex;align-items:center;gap:3px;margin-top:1px;}
+.s4-body{padding:10px 12px;overflow-y:auto;flex:1;}
+.s4-sec{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:10px 0 6px;}
+.s4-sec:first-child{margin-top:0;}
+.s4-item{background:#f9fafb;border-radius:9px;padding:9px 10px;margin-bottom:6px;}
+.s4-status{display:inline-block;border-radius:5px;padding:2px 8px;font-size:.62rem;font-weight:700;margin-bottom:4px;}
+.status-booked{background:#dbeafe;color:var(--blue);}
+.status-done{background:var(--yp-light);color:var(--yp);}
+.s4-item-name{font-size:.78rem;font-weight:600;margin-bottom:2px;}
+.s4-item-meta{font-size:.64rem;color:var(--muted);}
+.s4-item-price{font-size:.76rem;font-weight:700;color:var(--yp);margin-top:3px;}
+
+/* WHAT IS THIS section */
+.what-sec{background:#fff;padding:56px 40px;border-top:1px solid var(--border);}
+.what-inner{max-width:900px;margin:0 auto;}
+.what-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px;}
+.what-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:22px;}
+.wc-icon{font-size:1.6rem;margin-bottom:8px;}
+.wc-title{font-size:.98rem;font-weight:700;margin-bottom:5px;}
+.wc-text{font-size:.84rem;color:var(--muted);line-height:1.6;}
+
+/* MORE DEMOS */
+.more-sec{background:var(--bg);padding:48px 40px;border-top:1px solid var(--border);}
+.more-inner{max-width:1100px;margin:0 auto;}
+.more-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:22px;}
+.more-card{background:#fff;border:1px solid var(--border);border-radius:11px;padding:18px;text-align:center;cursor:pointer;transition:all .2s;}
+.more-card:hover{border-color:var(--yp);transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08);}
+.mc-ico{font-size:1.6rem;margin-bottom:6px;}
+.mc-name{font-size:.9rem;font-weight:700;margin-bottom:3px;}
+.mc-desc{font-size:.76rem;color:var(--muted);}
+
+/* CTA */
+.cta-sec{background:var(--yp-dark);padding:60px 40px;text-align:center;color:#fff;}
+.cta-sec h2{font-size:1.7rem;font-weight:800;margin-bottom:10px;}
+.cta-sec p{color:rgba(255,255,255,.68);margin-bottom:24px;}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-cta{background:var(--yp);color:#fff;padding:12px 26px;border-radius:9px;text-decoration:none;font-weight:700;}
+.btn-cta-o{background:transparent;color:#fff;padding:12px 26px;border-radius:9px;text-decoration:none;font-weight:600;border:1.5px solid rgba(255,255,255,.35);}
+
+/* FOOTER */
+.footer{background:#0a1209;color:rgba(255,255,255,.4);padding:20px 40px;text-align:center;font-size:.8rem;}
+.footer a{color:#6ee7b7;text-decoration:none;}
+
+@media(max-width:900px){
+  .phones-row{gap:16px;}
+  .ph{width:180px;}
+  .ph-inner{height:380px;}
+  .what-grid{grid-template-columns:1fr;}
+  .hero h1{font-size:1.6rem;}
+}
+@media(max-width:600px){
+  .phones-row{flex-direction:column;align-items:center;}
+  .showcase,.hero,.what-sec,.more-sec,.cta-sec{padding:40px 20px;}
+  .hdr{padding:0 20px;}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-logo">
+    <img src="Frame 9.png" alt="YP">
+    <div><div class="logo-t">YUSUPOV PRODUCTION</div><div class="logo-s">Мини-аппы для Telegram</div></div>
+  </div>
+  <a href="demo.html" class="hdr-back">← Назад к демо</a>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="case-badge">✦ Пример реализации</div>
+    <h1>Мини-апп <span>«Каталог услуг»</span></h1>
+    <p class="hero-p">Полноценный каталог с детальными карточками, программой лояльности и профилем клиента — всё прямо в Telegram.</p>
+    <div class="hero-tags">
+      <span class="htag">📋 Каталог</span>
+      <span class="htag">🏆 Бонусы</span>
+      <span class="htag">👤 Профиль</span>
+      <span class="htag">⚙️ Интеграция amoCRM</span>
+    </div>
+  </div>
+</section>
+
+<!-- 4 PHONES -->
+<section class="showcase">
+  <div class="showcase-inner">
+    <div class="sec-title">Все экраны приложения</div>
+    <div class="sec-sub">Нажмите на любой элемент — они интерактивны</div>
+
+    <div class="phones-row">
+
+      <!-- PHONE 1: CATALOG -->
+      <div class="phone-col">
+        <div class="phone-lbl">Каталог услуг</div>
+        <div class="phone-badge">Главный экран</div>
+        <div class="ph">
+          <div class="ph-inner">
+            <div class="sb"><span class="sb-time">9:41</span><div class="sb-icons">●●●● <span class="batt">100%</span></div></div>
+            <div class="app-bar"><span class="ab-back">‹</span><span class="ab-title">YP Каталог</span><span class="ab-close">×</span></div>
+            <div class="s1-filters">
+              <button class="fpill on">Все</button>
+              <button class="fpill">CRM</button>
+              <button class="fpill">Интеграции</button>
+              <button class="fpill">Мини-аппы</button>
+            </div>
+            <div class="s1-search"><input class="s1-si" type="text" placeholder="🔍 Поиск..."></div>
+            <div class="ph-body">
+              <div class="s1-list">
+                <div class="s1-card">
+                  <div class="s1-ico ico-g">⚙️</div>
+                  <div style="flex:1"><div class="s1-name">amoCRM Base</div><div class="s1-d">Внедрение и настройка</div></div>
+                  <div style="text-align:right"><div class="s1-price">30 000₽</div><div class="s1-sub">от 5 дней</div></div>
+                </div>
+                <div class="s1-card">
+                  <div class="s1-ico ico-g">🚀</div>
+                  <div style="flex:1"><div class="s1-name">amoCRM Pro</div><div class="s1-d">Полная автоматизация</div></div>
+                  <div style="text-align:right"><div class="s1-price">75 000₽</div><div class="s1-sub">от 14 дней</div></div>
+                </div>
+                <div class="s1-card">
+                  <div class="s1-ico ico-b">🔌</div>
+                  <div style="flex:1"><div class="s1-name">WhatsApp интеграция</div><div class="s1-d">Wazzup / Radist</div></div>
+                  <div style="text-align:right"><div class="s1-price">15 000₽</div><div class="s1-sub">от 2 дней</div></div>
+                </div>
+                <div class="s1-card">
+                  <div class="s1-ico ico-p">📱</div>
+                  <div style="flex:1"><div class="s1-name">Мини-апп</div><div class="s1-d">Telegram Mini App</div></div>
+                  <div style="text-align:right"><div class="s1-price">25 000₽</div><div class="s1-sub">от 7 дней</div></div>
+                </div>
+                <div class="s1-card">
+                  <div class="s1-ico ico-a">🤖</div>
+                  <div style="flex:1"><div class="s1-name">ИИ в CRM</div><div class="s1-d">GPT + amoCRM</div></div>
+                  <div style="text-align:right"><div class="s1-price">40 000₽</div><div class="s1-sub">от 10 дней</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="ph-nav">
+              <div class="pni on"><span class="pni-ico">📋</span><span class="pni-lbl">Каталог</span></div>
+              <div class="pni"><span class="pni-ico">📌</span><span class="pni-lbl">Заявки</span></div>
+              <div class="pni"><span class="pni-ico">🏆</span><span class="pni-lbl">Бонусы</span></div>
+              <div class="pni"><span class="pni-ico">👤</span><span class="pni-lbl">Профиль</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHONE 2: DETAIL -->
+      <div class="phone-col">
+        <div class="phone-lbl">Детали услуги</div>
+        <div class="phone-badge">Карточка</div>
+        <div class="ph">
+          <div class="ph-inner">
+            <div class="sb"><span class="sb-time">9:41</span><div class="sb-icons">●●●● <span class="batt">100%</span></div></div>
+            <div class="app-bar"><span class="ab-back">‹</span><span class="ab-title">YP Каталог</span><span class="ab-close">×</span></div>
+            <div class="ph-body">
+              <div class="s2-img">⚙️</div>
+              <div class="s2-body">
+                <div class="s2-badge">amoCRM</div>
+                <div class="s2-title">amoCRM Pro — полная автоматизация воронки продаж</div>
+                <div class="s2-meta">
+                  <div class="s2-m">📅 от 14 дней</div>
+                  <div class="s2-m">🔧 Под ключ</div>
+                </div>
+                <div class="s2-desc">Настройка воронок, автоматические задачи, интеграции с мессенджерами и телефонией, аналитика продаж.</div>
+                <div class="s2-section-lbl">Ближайшие слоты</div>
+                <div class="s2-slots">
+                  <div class="s2-slot">
+                    <div><div class="s2-slot-date">28 марта — 10 апреля</div><div class="s2-slot-info">3 места свободно</div></div>
+                    <div class="s2-slot-price">75 000₽</div>
+                  </div>
+                  <div class="s2-slot">
+                    <div><div class="s2-slot-date">14 апреля — 28 апреля</div><div class="s2-slot-info" style="color:#ef4444">2 места!</div></div>
+                    <div class="s2-slot-price">80 000₽</div>
+                  </div>
+                </div>
+                <button class="s2-btn">Оставить заявку</button>
+              </div>
+            </div>
+            <div class="ph-nav">
+              <div class="pni"><span class="pni-ico">📋</span><span class="pni-lbl">Каталог</span></div>
+              <div class="pni"><span class="pni-ico">📌</span><span class="pni-lbl">Заявки</span></div>
+              <div class="pni"><span class="pni-ico">🏆</span><span class="pni-lbl">Бонусы</span></div>
+              <div class="pni"><span class="pni-ico">👤</span><span class="pni-lbl">Профиль</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHONE 3: BONUSES -->
+      <div class="phone-col">
+        <div class="phone-lbl">Программа лояльности</div>
+        <div class="phone-badge">Бонусы</div>
+        <div class="ph">
+          <div class="ph-inner">
+            <div class="sb"><span class="sb-time">9:41</span><div class="sb-icons">●●●● <span class="batt">100%</span></div></div>
+            <div class="app-bar"><span class="ab-back">‹</span><span class="ab-title">YP Бонусы</span><span class="ab-close">×</span></div>
+            <div class="s3-card">
+              <div style="font-size:.7rem;opacity:.8">Ваш бонусный баланс</div>
+              <div class="s3-bal">2 340 <span style="font-size:1rem">₽</span></div>
+              <div class="s3-warn">⚠️ 680₽ сгорят 15 апреля 2026</div>
+            </div>
+            <div class="s3-hist">
+              <div class="s3-lbl">История операций</div>
+              <div class="s3-row">Проект «amoCRM Pro»<span class="s3-dt" style="margin-left:auto;margin-right:5px">15 мар</span><span class="s3-pts s3p">+800₽</span></div>
+              <div class="s3-row">Заявка «Мини-апп»<span class="s3-dt" style="margin-left:auto;margin-right:5px">10 мар</span><span class="s3-pts s3m">−200₽</span></div>
+              <div class="s3-row">Проект «WhatsApp»<span class="s3-dt" style="margin-left:auto;margin-right:5px">28 фев</span><span class="s3-pts s3p">+400₽</span></div>
+              <div class="s3-row">Проект «3 интеграции»<span class="s3-dt" style="margin-left:auto;margin-right:5px">5 фев</span><span class="s3-pts s3p">+680₽</span></div>
+              <div class="s3-row">Автосгорание (12 мес)<span class="s3-dt" style="margin-left:auto;margin-right:5px">15 янв</span><span class="s3-pts s3m">−340₽</span></div>
+            </div>
+            <div class="ph-nav">
+              <div class="pni"><span class="pni-ico">📋</span><span class="pni-lbl">Каталог</span></div>
+              <div class="pni"><span class="pni-ico">📌</span><span class="pni-lbl">Заявки</span></div>
+              <div class="pni on-b"><span class="pni-ico">🏆</span><span class="pni-lbl">Бонусы</span></div>
+              <div class="pni"><span class="pni-ico">👤</span><span class="pni-lbl">Профиль</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHONE 4: PROFILE -->
+      <div class="phone-col">
+        <div class="phone-lbl">Профиль клиента</div>
+        <div class="phone-badge">Кабинет</div>
+        <div class="ph">
+          <div class="ph-inner">
+            <div class="sb"><span class="sb-time">9:41</span><div class="sb-icons">●●●● <span class="batt">100%</span></div></div>
+            <div class="app-bar"><span class="ab-back">‹</span><span class="ab-title">Профиль</span><span class="ab-close">×</span></div>
+            <div class="s4-head">
+              <div class="s4-av">ИИ</div>
+              <div>
+                <div class="s4-name">Иванов Иван</div>
+                <div class="s4-phone">+7 (999) 123-45-67</div>
+                <div class="s4-loc">📍 Казань</div>
+              </div>
+            </div>
+            <div class="ph-body">
+              <div class="s4-body">
+                <div class="s4-sec">Мои проекты</div>
+                <div class="s4-item">
+                  <div><span class="s4-status status-booked">В работе</span></div>
+                  <div class="s4-item-name">amoCRM Pro</div>
+                  <div class="s4-item-meta">📅 28 мар – 10 апр · 🔧 Под ключ</div>
+                  <div class="s4-item-price">75 000₽ <span style="font-size:.62rem;color:#16a34a">+800₽ бонусами</span></div>
+                </div>
+                <div class="s4-item">
+                  <div><span class="s4-status status-done">Завершён</span></div>
+                  <div class="s4-item-name">WhatsApp интеграция</div>
+                  <div class="s4-item-meta">📅 10–12 фев · 🔌 Wazzup</div>
+                  <div class="s4-item-price">15 000₽ <span style="font-size:.62rem;color:#16a34a">+400₽ бонусами</span></div>
+                </div>
+                <div class="s4-item">
+                  <div><span class="s4-status status-done">Завершён</span></div>
+                  <div class="s4-item-name">amoCRM Base</div>
+                  <div class="s4-item-meta">📅 5–10 янв · ⚙️ Настройка</div>
+                  <div class="s4-item-price">30 000₽ <span style="font-size:.62rem;color:#16a34a">+680₽ бонусами</span></div>
+                </div>
+                <div class="s4-sec">Настройки</div>
+                <div class="s4-item" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+                  <span style="font-size:.76rem">🔔 Уведомления</span><span style="font-size:.7rem;color:var(--muted)">›</span>
+                </div>
+                <div class="s4-item" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+                  <span style="font-size:.76rem">📞 Поддержка</span><span style="font-size:.7rem;color:var(--muted)">›</span>
+                </div>
+              </div>
+            </div>
+            <div class="ph-nav">
+              <div class="pni"><span class="pni-ico">📋</span><span class="pni-lbl">Каталог</span></div>
+              <div class="pni"><span class="pni-ico">📌</span><span class="pni-lbl">Заявки</span></div>
+              <div class="pni"><span class="pni-ico">🏆</span><span class="pni-lbl">Бонусы</span></div>
+              <div class="pni on-bl"><span class="pni-ico">👤</span><span class="pni-lbl">Профиль</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /phones-row -->
+  </div>
+</section>
+
+<!-- WHAT IS THIS -->
+<section class="what-sec">
+  <div class="what-inner">
+    <div class="sec-title" style="text-align:left">Что включено в мини-апп каталог</div>
+    <div class="what-grid">
+      <div class="what-card"><div class="wc-icon">📋</div><div class="wc-title">Каталог с фильтрами</div><div class="wc-text">Поиск, фильтрация по категориям, карточки с описанием, ценой и кнопкой заявки.</div></div>
+      <div class="what-card"><div class="wc-icon">🗓️</div><div class="wc-title">Карточка услуги</div><div class="wc-text">Детальная страница с описанием, слотами времени и кнопкой оформления заявки.</div></div>
+      <div class="what-card"><div class="wc-icon">🏆</div><div class="wc-title">Программа лояльности</div><div class="wc-text">Начисление бонусных баллов за каждый проект, история операций, срок действия.</div></div>
+      <div class="what-card"><div class="wc-icon">👤</div><div class="wc-title">Личный кабинет</div><div class="wc-text">История проектов, статусы, начисленные бонусы, настройки уведомлений.</div></div>
+      <div class="what-card"><div class="wc-icon">⚙️</div><div class="wc-title">Интеграция с amoCRM</div><div class="wc-text">Все заявки автоматически попадают в CRM, менеджеры получают уведомление мгновенно.</div></div>
+      <div class="what-card"><div class="wc-icon">🤖</div><div class="wc-title">Адаптация под сферу</div><div class="wc-text">Сделаем аналог для вашего бизнеса: бани, медицина, туризм, фитнес — любая ниша.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MORE DEMOS -->
+<section class="more-sec">
+  <div class="more-inner">
+    <div class="sec-title" style="text-align:left">Другие типы мини-аппов</div>
+    <div class="sec-sub" style="text-align:left">Каждый тип — отдельный продукт. Смотрите интерактивное демо.</div>
+    <div class="more-grid">
+      <a href="demo.html#demo" style="text-decoration:none;color:inherit" onclick="setTimeout(()=>window.show?.('booking'),300)">
+        <div class="more-card"><div class="mc-ico">📅</div><div class="mc-name">Запись на услуги</div><div class="mc-desc">Онлайн-бронирование с выбором даты и времени</div></div>
+      </a>
+      <a href="demo.html#demo" style="text-decoration:none;color:inherit">
+        <div class="more-card"><div class="mc-ico">🤝</div><div class="mc-name">Партнёрская программа</div><div class="mc-desc">Реферальные ссылки и автовыплаты</div></div>
+      </a>
+      <a href="demo.html#demo" style="text-decoration:none;color:inherit">
+        <div class="more-card"><div class="mc-ico">🛒</div><div class="mc-name">Онлайн-магазин</div><div class="mc-desc">Корзина и оплата прямо в Telegram</div></div>
+      </a>
+      <a href="demo.html#demo" style="text-decoration:none;color:inherit">
+        <div class="more-card"><div class="mc-ico">📊</div><div class="mc-name">Квиз / Подбор</div><div class="mc-desc">Опрос для подбора нужного решения</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec">
+  <h2>Хотите такой же для вашего бизнеса?</h2>
+  <p>Адаптируем под вашу сферу. Бесплатная консультация — без обязательств.</p>
+  <div class="cta-btns">
+    <a href="https://t.me/yusupov_pro" class="btn-cta">💬 Написать в Telegram</a>
+    <a href="https://instagram.com/yusupovv_lenar" class="btn-cta-o">📸 Instagram</a>
+  </div>
+</section>
+
+<footer class="footer">
+  © 2025 Yusupov Production &nbsp;·&nbsp;
+  <a href="demo.html">← Все мини-аппы</a> &nbsp;·&nbsp;
+  <a href="https://t.me/yusupov_pro">@yusupov_pro</a>
+</footer>
+
+<script>
+document.querySelectorAll('.fpill').forEach(p=>p.addEventListener('click',function(){
+  this.closest('.s1-filters').querySelectorAll('.fpill').forEach(x=>x.classList.remove('on'));
+  this.classList.add('on');
+}));
+</script>
+</body>
+</html>

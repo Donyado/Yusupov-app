@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Yusupov Production — Мини-Аппы</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --green:#1a7a3a;--green-h:#15632f;--green-l:rgba(26,122,58,.08);--green-ll:rgba(26,122,58,.04);
+  --bg:#ffffff;--bg2:#f5f5f5;--bg3:#fafafa;
+  --text:#111111;--muted:#6b6b6b;--light:#999999;
+  --border:#e5e5e5;
+  --r:14px;--r-lg:20px;--r-xl:28px;
+}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;height:100vh;height:100dvh;}
+
+/* APP SHELL */
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.content::-webkit-scrollbar{width:0;}
+
+/* BOTTOM NAV */
+.bnav{display:flex;background:var(--bg);border-top:1px solid var(--border);padding:2px 0;padding-bottom:max(2px,env(safe-area-inset-bottom));}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 0 4px;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.bni-ico{font-size:1.25rem;line-height:1.2;}
+.bni-lbl{font-size:.6rem;color:var(--light);font-weight:500;margin-top:1px;}
+.bni.on .bni-lbl{color:var(--green);font-weight:700;}
+.bni.on .bni-ico{transform:scale(1.1);}
+
+/* SCREENS */
+.sc{display:none;padding-bottom:8px;}
+.sc.on{display:block;}
+
+/* ── COMMON ── */
+.pad{padding:0 16px;}
+.mt12{margin-top:12px;}.mt16{margin-top:16px;}.mt20{margin-top:20px;}.mb12{margin-bottom:12px;}
+.sec-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--light);margin-bottom:10px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:600;background:var(--green-l);color:var(--green);}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;margin-bottom:10px;transition:all .2s;}
+
+/* BUTTONS */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:var(--r);font-size:.88rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;font-family:inherit;width:100%;-webkit-tap-highlight-color:transparent;}
+.btn-g{background:var(--green);color:#fff;}
+.btn-g:active{background:var(--green-h);transform:scale(.98);}
+.btn-o{background:var(--bg);border:1px solid var(--border);color:var(--text);}
+.btn-o:active{background:var(--bg2);}
+.btn-sm{padding:8px 16px;font-size:.8rem;border-radius:10px;width:auto;}
+.btn-pill{border-radius:999px;}
+
+/* INPUT */
+.inp{width:100%;height:48px;border:1px solid var(--border);border-radius:var(--r);padding:0 16px;font-size:.88rem;font-family:inherit;background:var(--bg3);outline:none;transition:border-color .2s;}
+.inp:focus{border-color:var(--green);}
+.ta{width:100%;min-height:80px;border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;font-size:.88rem;font-family:inherit;background:var(--bg3);outline:none;resize:vertical;}
+.ta:focus{border-color:var(--green);}
+.fg{margin-bottom:12px;}
+.fl{display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:5px;}
+
+/* ═══════════════════════
+   HOME SCREEN
+   ═══════════════════════ */
+.hero-card{background:linear-gradient(135deg,#0d3d1e,#1a7a3a);border-radius:0 0 var(--r-xl) var(--r-xl);padding:28px 20px 24px;color:#fff;}
+.hero-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.hero-logo{width:52px;height:52px;border-radius:12px;}
+.hero-co{font-size:1rem;font-weight:800;}
+.hero-tag{font-size:.72rem;opacity:.7;margin-top:2px;}
+.hero-stats{display:flex;gap:8px;}
+.hs{flex:1;background:rgba(255,255,255,.12);border-radius:10px;padding:10px 6px;text-align:center;}
+.hs-n{font-size:1rem;font-weight:800;}
+.hs-l{font-size:.6rem;opacity:.8;margin-top:1px;}
+.hero-desc{font-size:.78rem;opacity:.85;line-height:1.6;margin-top:14px;}
+
+/* Mini-app types horizontal scroll */
+.types-scroll{display:flex;gap:10px;overflow-x:auto;padding:0 16px 4px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;}
+.types-scroll::-webkit-scrollbar{display:none;}
+.type-card{min-width:130px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 12px;text-align:center;flex-shrink:0;scroll-snap-align:start;transition:all .2s;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.type-card:active{transform:scale(.97);border-color:var(--green);}
+.tc-ico{font-size:1.8rem;margin-bottom:6px;}
+.tc-name{font-size:.78rem;font-weight:700;margin-bottom:3px;}
+.tc-link{font-size:.65rem;color:var(--green);font-weight:600;}
+
+/* Services list */
+.srv-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bg2);}
+.srv-item:last-child{border:none;}
+.srv-ico-box{width:40px;height:40px;border-radius:10px;background:var(--green-l);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;transition:background .2s;}
+.srv-name{font-size:.84rem;font-weight:600;}
+.srv-d{font-size:.72rem;color:var(--muted);margin-top:1px;}
+
+/* Partners */
+.ptags-row{display:flex;flex-wrap:wrap;gap:6px;}
+.ptag{background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:6px 14px;font-size:.76rem;font-weight:600;}
+
+/* Social */
+.soc-row{display:flex;gap:8px;flex-wrap:wrap;}
+.soc-btn{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:8px 14px;font-size:.76rem;font-weight:500;color:var(--text);text-decoration:none;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.soc-btn:active{border-color:var(--green);color:var(--green);}
+
+/* Sphere section */
+.sphere-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 16px 4px;-webkit-overflow-scrolling:touch;}
+.sphere-scroll::-webkit-scrollbar{display:none;}
+.sphere-pill{background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:8px 16px;font-size:.78rem;font-weight:500;white-space:nowrap;flex-shrink:0;}
+.sphere-pill.cta{background:var(--green-l);border-color:var(--green);color:var(--green);font-weight:700;}
+
+/* ═══════════════════════
+   CATALOG SCREEN
+   ═══════════════════════ */
+.search-wrap{padding:12px 16px 0;}
+.search-inp{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:10px 14px;font-size:.84rem;font-family:inherit;outline:none;transition:border-color .2s;}
+.search-inp:focus{border-color:var(--green);}
+.filter-scroll{display:flex;gap:6px;overflow-x:auto;padding:10px 16px 0;-webkit-overflow-scrolling:touch;}
+.filter-scroll::-webkit-scrollbar{display:none;}
+.fpill{background:var(--bg2);border:none;border-radius:999px;padding:7px 14px;font-size:.76rem;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:inherit;-webkit-tap-highlight-color:transparent;transition:all .15s;}
+.fpill.on{background:var(--green);color:#fff;}
+.svc-list{padding:12px 16px;}
+.svc-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;transition:all .2s;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.svc-card:active{transform:scale(.98);border-color:var(--green);}
+.svc-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.ico-g{background:#dcfce7;}.ico-b{background:#dbeafe;}.ico-p{background:#ede9fe;}.ico-a{background:#fef3c7;}
+.svc-info{flex:1;}
+.svc-n{font-size:.88rem;font-weight:700;margin-bottom:2px;}
+.svc-desc{font-size:.74rem;color:var(--muted);}
+.svc-right{text-align:right;flex-shrink:0;}
+.svc-price{font-size:.92rem;font-weight:800;color:var(--green);}
+.svc-sub{font-size:.65rem;color:var(--light);}
+
+/* ═══════════════════════
+   BOOKING SCREEN
+   ═══════════════════════ */
+.book-body{padding:16px;}
+.radio-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.ropt{display:flex;align-items:center;gap:10px;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;cursor:pointer;font-size:.84rem;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.ropt.sel{border-color:var(--green);background:var(--green-l);}
+.rdot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all .15s;}
+.ropt.sel .rdot{border-color:var(--green);background:var(--green);box-shadow:inset 0 0 0 3px #fff;}
+.date-scroll{display:flex;gap:6px;overflow-x:auto;margin-bottom:16px;-webkit-overflow-scrolling:touch;}
+.date-scroll::-webkit-scrollbar{display:none;}
+.dchip{background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:8px 12px;text-align:center;cursor:pointer;min-width:54px;flex-shrink:0;-webkit-tap-highlight-color:transparent;transition:all .15s;}
+.dchip.sel{background:var(--green);border-color:var(--green);color:#fff;}
+.dchip-d{font-size:.6rem;opacity:.65;font-weight:500;}
+.dchip-n{font-size:.92rem;font-weight:700;}
+.time-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.tchip{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:.82rem;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;}
+.tchip.sel{background:var(--green);border-color:var(--green);color:#fff;}
+
+/* ═══════════════════════
+   BONUSES SCREEN
+   ═══════════════════════ */
+.bonus-card{margin:16px;border-radius:var(--r-xl);padding:22px 18px;color:#fff;background:linear-gradient(135deg,#0d3d1e,#1a7a3a);position:relative;overflow:hidden;}
+.bonus-card::after{content:'YP';position:absolute;right:-4px;bottom:-18px;font-size:5rem;font-weight:900;opacity:.06;}
+.bc-lvl{font-size:.68rem;background:rgba(255,255,255,.14);display:inline-block;padding:3px 12px;border-radius:999px;margin-bottom:6px;}
+.bc-name{font-size:.92rem;font-weight:700;margin-bottom:2px;}
+.bc-pts{font-size:1.8rem;font-weight:800;line-height:1.2;}
+.bc-lbl{font-size:.68rem;opacity:.7;}
+.bc-prog{background:rgba(255,255,255,.2);height:5px;border-radius:3px;margin:12px 0 4px;overflow:hidden;}
+.bc-fill{background:rgba(255,255,255,.8);height:100%;border-radius:3px;width:70%;}
+.bc-sub{font-size:.65rem;opacity:.6;}
+.bc-warn{background:rgba(255,255,255,.12);border-radius:10px;padding:8px 12px;font-size:.7rem;margin-top:10px;display:flex;align-items:center;gap:6px;}
+.hist-list{padding:0 16px;}
+.hrow{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--bg2);gap:8px;}
+.hrow:last-child{border:none;}
+.hrow-info{flex:1;}
+.hrow-name{font-size:.82rem;font-weight:600;}
+.hrow-dt{font-size:.65rem;color:var(--light);}
+.hpts{font-size:.88rem;font-weight:700;}
+.hp{color:var(--green);}.hm{color:#dc2626;}
+
+/* ═══════════════════════
+   CONTACT SCREEN
+   ═══════════════════════ */
+.contact-head{text-align:center;padding:24px 16px 0;}
+.contact-head h2{font-size:1.3rem;font-weight:800;margin-bottom:4px;}
+.contact-head p{font-size:.84rem;color:var(--muted);}
+.form-wrap{padding:20px 16px;}
+.form-note{background:var(--green-l);border-radius:12px;padding:12px 14px;font-size:.78rem;color:var(--green);font-weight:500;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="content" id="content">
+
+    <!-- ═══ HOME ═══ -->
+    <div class="sc on" id="sc-home">
+      <div class="hero-card">
+        <div class="hero-row">
+          <img src="logo.png" class="hero-logo" alt="YP">
+          <div>
+            <div class="hero-co">Yusupov Production</div>
+            <div class="hero-tag">Сертифицированный партнёр amoCRM</div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="hs"><div class="hs-n">120+</div><div class="hs-l">Проектов</div></div>
+          <div class="hs"><div class="hs-n">5+</div><div class="hs-l">Лет</div></div>
+          <div class="hs"><div class="hs-n">24/7</div><div class="hs-l">Поддержка</div></div>
+        </div>
+        <div class="hero-desc">Специализируемся на цифровой трансформации продаж. Настраиваем amoCRM так, чтобы она помогала менеджерам.</div>
+      </div>
+
+      <div class="pad mt16">
+        <div class="sec-lbl">Наши мини-аппы</div>
+      </div>
+      <div class="types-scroll">
+        <div class="type-card" onclick="go('catalog')"><div class="tc-ico">📋</div><div class="tc-name">Каталог</div><div class="tc-link">Посмотреть →</div></div>
+        <div class="type-card" onclick="go('booking')"><div class="tc-ico">📅</div><div class="tc-name">Запись</div><div class="tc-link">Посмотреть →</div></div>
+        <div class="type-card" onclick="go('bonuses')"><div class="tc-ico">🏆</div><div class="tc-name">Лояльность</div><div class="tc-link">Посмотреть →</div></div>
+        <div class="type-card"><div class="tc-ico">🤝</div><div class="tc-name">Партнёрка</div><div class="tc-link">Скоро</div></div>
+        <div class="type-card"><div class="tc-ico">🛒</div><div class="tc-name">Магазин</div><div class="tc-link">Скоро</div></div>
+        <div class="type-card"><div class="tc-ico">📊</div><div class="tc-name">Квиз</div><div class="tc-link">Скоро</div></div>
+        <div class="type-card"><div class="tc-ico">🤖</div><div class="tc-name">Чат-бот</div><div class="tc-link">Скоро</div></div>
+      </div>
+
+      <div class="pad mt16">
+        <div class="sec-lbl">Сделаем под вашу сферу</div>
+      </div>
+      <div class="sphere-scroll">
+        <div class="sphere-pill">🛁 Бани и СПА</div>
+        <div class="sphere-pill">✈️ Туризм</div>
+        <div class="sphere-pill">🦷 Медицина</div>
+        <div class="sphere-pill">🍕 Рестораны</div>
+        <div class="sphere-pill">💄 Красота</div>
+        <div class="sphere-pill">🏋️ Фитнес</div>
+        <div class="sphere-pill">📚 Образование</div>
+        <div class="sphere-pill">🛒 Торговля</div>
+        <div class="sphere-pill cta" onclick="go('contact')">💬 Ваша сфера →</div>
+      </div>
+
+      <div class="pad mt20">
+        <div class="sec-lbl">Основные услуги</div>
+        <div class="srv-item"><div class="srv-ico-box">⚙️</div><div><div class="srv-name">Внедрение amoCRM</div><div class="srv-d">Настройка и автоматизация</div></div></div>
+        <div class="srv-item"><div class="srv-ico-box">🔌</div><div><div class="srv-name">Интеграции</div><div class="srv-d">Телефония, мессенджеры</div></div></div>
+        <div class="srv-item"><div class="srv-ico-box">📱</div><div><div class="srv-name">Разработка мини-аппов</div><div class="srv-d">Telegram Mini Apps</div></div></div>
+        <div class="srv-item"><div class="srv-ico-box">🤖</div><div><div class="srv-name">ИИ внутри CRM</div><div class="srv-d">GPT-ассистент</div></div></div>
+        <div class="srv-item"><div class="srv-ico-box">📊</div><div><div class="srv-name">Аналитика</div><div class="srv-d">Дашборды и отчёты</div></div></div>
+      </div>
+
+      <div class="pad mt16">
+        <div class="sec-lbl">Партнёры</div>
+        <div class="ptags-row">
+          <span class="ptag">amoCRM</span><span class="ptag">Radist.Online</span>
+          <span class="ptag">Wazzup</span><span class="ptag">Команда F5</span>
+          <span class="ptag">Sipuni/UIS</span><span class="ptag">Генезис</span>
+        </div>
+      </div>
+
+      <div class="pad mt16">
+        <div class="sec-lbl">Социальные сети</div>
+        <div class="soc-row">
+          <a href="https://instagram.com/yusupovv_lenar" class="soc-btn" target="_blank">📸 Instagram</a>
+          <a href="https://t.me/yusupov_pro" class="soc-btn" target="_blank">💬 Telegram</a>
+          <a href="https://vk.com/lenar_yus" class="soc-btn" target="_blank">📘 ВКонтакте</a>
+        </div>
+      </div>
+
+      <div class="pad mt16 mb12">
+        <button class="btn btn-g btn-pill" onclick="go('contact')">Оставить заявку</button>
+        <div style="height:6px"></div>
+        <a href="https://t.me/yusupov_pro" style="text-decoration:none">
+          <button class="btn btn-o btn-pill">💬 Написать в Telegram</button>
+        </a>
+      </div>
+    </div>
+
+    <!-- ═══ CATALOG ═══ -->
+    <div class="sc" id="sc-catalog">
+      <div class="pad" style="padding-top:12px">
+        <div class="badge">📋 Пример мини-аппа «Каталог»</div>
+      </div>
+      <div class="search-wrap"><input class="search-inp" type="text" placeholder="🔍  Поиск услуг..."></div>
+      <div class="filter-scroll">
+        <button class="fpill on">Все</button>
+        <button class="fpill">Внедрение</button>
+        <button class="fpill">Интеграции</button>
+        <button class="fpill">Мини-аппы</button>
+        <button class="fpill">ИИ</button>
+      </div>
+      <div class="svc-list">
+        <div class="svc-card">
+          <div class="svc-ico ico-g">⚙️</div>
+          <div class="svc-info"><div class="svc-n">amoCRM Base</div><div class="svc-desc">Базовое внедрение и настройка</div></div>
+          <div class="svc-right"><div class="svc-price">30 000₽</div><div class="svc-sub">от 5 дней</div></div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-ico ico-g">🚀</div>
+          <div class="svc-info"><div class="svc-n">amoCRM Pro</div><div class="svc-desc">Полная автоматизация воронки</div></div>
+          <div class="svc-right"><div class="svc-price">75 000₽</div><div class="svc-sub">от 14 дней</div></div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-ico ico-b">🔌</div>
+          <div class="svc-info"><div class="svc-n">WhatsApp интеграция</div><div class="svc-desc">Wazzup / Radist.Online</div></div>
+          <div class="svc-right"><div class="svc-price">15 000₽</div><div class="svc-sub">от 2 дней</div></div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-ico ico-p">📱</div>
+          <div class="svc-info"><div class="svc-n">Мини-апп Каталог</div><div class="svc-desc">Telegram Mini App</div></div>
+          <div class="svc-right"><div class="svc-price">25 000₽</div><div class="svc-sub">от 7 дней</div></div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-ico ico-a">🤖</div>
+          <div class="svc-info"><div class="svc-n">ИИ-ассистент в CRM</div><div class="svc-desc">GPT внутри amoCRM</div></div>
+          <div class="svc-right"><div class="svc-price">40 000₽</div><div class="svc-sub">от 10 дней</div></div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-ico ico-g">📊</div>
+          <div class="svc-info"><div class="svc-n">Аналитика продаж</div><div class="svc-desc">Дашборды и отчёты</div></div>
+          <div class="svc-right"><div class="svc-price">20 000₽</div><div class="svc-sub">от 3 дней</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BOOKING ═══ -->
+    <div class="sc" id="sc-booking">
+      <div class="pad" style="padding-top:12px">
+        <div class="badge">📅 Пример мини-аппа «Запись»</div>
+      </div>
+      <div class="book-body">
+        <div class="sec-lbl">Выберите услугу</div>
+        <div class="radio-list">
+          <div class="ropt sel"><div class="rdot"></div>Внедрение amoCRM</div>
+          <div class="ropt"><div class="rdot"></div>Интеграция мессенджеров</div>
+          <div class="ropt"><div class="rdot"></div>Техническое сопровождение</div>
+          <div class="ropt"><div class="rdot"></div>Разработка мини-аппа</div>
+        </div>
+
+        <div class="sec-lbl">Выберите дату</div>
+        <div class="date-scroll">
+          <div class="dchip"><div class="dchip-d">Пт</div><div class="dchip-n">28</div></div>
+          <div class="dchip sel"><div class="dchip-d">Пн</div><div class="dchip-n">31</div></div>
+          <div class="dchip"><div class="dchip-d">Вт</div><div class="dchip-n">1</div></div>
+          <div class="dchip"><div class="dchip-d">Ср</div><div class="dchip-n">2</div></div>
+          <div class="dchip"><div class="dchip-d">Чт</div><div class="dchip-n">3</div></div>
+          <div class="dchip"><div class="dchip-d">Пт</div><div class="dchip-n">4</div></div>
+        </div>
+
+        <div class="sec-lbl">Выберите время</div>
+        <div class="time-grid">
+          <span class="tchip">10:00</span>
+          <span class="tchip sel">11:00</span>
+          <span class="tchip">13:00</span>
+          <span class="tchip">14:00</span>
+          <span class="tchip">15:00</span>
+          <span class="tchip">16:00</span>
+        </div>
+
+        <button class="btn btn-g btn-pill" onclick="this.textContent='✓ Записано!';this.style.background='#15632f';setTimeout(()=>{this.textContent='Записаться';this.style.background=''},2500)">Записаться</button>
+      </div>
+    </div>
+
+    <!-- ═══ BONUSES ═══ -->
+    <div class="sc" id="sc-bonuses">
+      <div class="pad" style="padding-top:12px">
+        <div class="badge">🏆 Пример мини-аппа «Лояльность»</div>
+      </div>
+      <div class="bonus-card">
+        <div class="bc-lvl">⭐⭐ Silver Partner</div>
+        <div class="bc-name">Иванов Иван</div>
+        <div class="bc-pts">2 450</div>
+        <div class="bc-lbl">баллов</div>
+        <div class="bc-prog"><div class="bc-fill"></div></div>
+        <div class="bc-sub">До Gold: ещё 550 баллов</div>
+        <div class="bc-warn">⚠️ 680₽ сгорят 15 апреля 2026</div>
+      </div>
+      <div class="pad" style="margin-bottom:8px">
+        <button class="btn btn-g btn-pill">Обменять баллы</button>
+      </div>
+      <div class="pad"><div class="sec-lbl">История операций</div></div>
+      <div class="hist-list">
+        <div class="hrow"><div class="hrow-info"><div class="hrow-name">📦 Проект «amoCRM Pro»</div><div class="hrow-dt">15 марта · Начисление</div></div><div class="hpts hp">+800</div></div>
+        <div class="hrow"><div class="hrow-info"><div class="hrow-name">🎁 Обмен баллов</div><div class="hrow-dt">10 марта · Списание</div></div><div class="hpts hm">−200</div></div>
+        <div class="hrow"><div class="hrow-info"><div class="hrow-name">🔌 WhatsApp интеграция</div><div class="hrow-dt">28 февраля · Начисление</div></div><div class="hpts hp">+400</div></div>
+        <div class="hrow"><div class="hrow-info"><div class="hrow-name">📊 Аналитика продаж</div><div class="hrow-dt">5 февраля · Начисление</div></div><div class="hpts hp">+680</div></div>
+        <div class="hrow"><div class="hrow-info"><div class="hrow-name">⏰ Автосгорание (12 мес)</div><div class="hrow-dt">15 января · Сгорание</div></div><div class="hpts hm">−340</div></div>
+      </div>
+    </div>
+
+    <!-- ═══ CONTACT ═══ -->
+    <div class="sc" id="sc-contact">
+      <div class="contact-head">
+        <h2>Оставить заявку</h2>
+        <p>Свяжемся в течение 1 часа</p>
+      </div>
+      <div class="form-wrap">
+        <div class="form-note">💡 Заявка автоматически попадёт в amoCRM — менеджер свяжется</div>
+        <div class="fg"><label class="fl">Имя</label><input class="inp" type="text" placeholder="Как вас зовут?"></div>
+        <div class="fg"><label class="fl">Телефон</label><input class="inp" type="tel" placeholder="+7 (___) ___-__-__"></div>
+        <div class="fg">
+          <label class="fl">Что нужно?</label>
+          <div class="radio-list">
+            <div class="ropt sel"><div class="rdot"></div>Внедрение amoCRM</div>
+            <div class="ropt"><div class="rdot"></div>Разработка мини-аппа</div>
+            <div class="ropt"><div class="rdot"></div>Интеграция</div>
+            <div class="ropt"><div class="rdot"></div>Другое</div>
+          </div>
+        </div>
+        <div class="fg"><label class="fl">Комментарий</label><textarea class="ta" placeholder="Опишите задачу..."></textarea></div>
+        <button class="btn btn-g btn-pill" id="submit-btn" onclick="submitForm(this)">Отправить заявку</button>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <nav class="bnav" id="bnav">
+    <div class="bni on" data-sc="home"><span class="bni-ico">🏠</span><span class="bni-lbl">Главная</span></div>
+    <div class="bni" data-sc="catalog"><span class="bni-ico">📋</span><span class="bni-lbl">Каталог</span></div>
+    <div class="bni" data-sc="booking"><span class="bni-ico">📅</span><span class="bni-lbl">Запись</span></div>
+    <div class="bni" data-sc="bonuses"><span class="bni-ico">🏆</span><span class="bni-lbl">Бонусы</span></div>
+    <div class="bni" data-sc="contact"><span class="bni-ico">📝</span><span class="bni-lbl">Заявка</span></div>
+  </nav>
+</div>
+
+<script>
+// Telegram WebApp
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+
+// Screen switching
+function go(name) {
+  document.querySelectorAll('.sc').forEach(s => s.classList.remove('on'));
+  document.getElementById('sc-' + name).classList.add('on');
+  document.querySelectorAll('.bni').forEach(b => b.classList.toggle('on', b.dataset.sc === name));
+  document.getElementById('content').scrollTo(0, 0);
+}
+
+// Bottom nav
+document.querySelectorAll('.bni').forEach(b => {
+  b.addEventListener('click', () => go(b.dataset.sc));
+});
+
+// Filter pills
+document.querySelectorAll('.fpill').forEach(p => {
+  p.addEventListener('click', function() {
+    this.closest('.filter-scroll').querySelectorAll('.fpill').forEach(x => x.classList.remove('on'));
+    this.classList.add('on');
+  });
+});
+
+// Radio options
+document.querySelectorAll('.ropt').forEach(r => {
+  r.addEventListener('click', function() {
+    this.closest('.radio-list').querySelectorAll('.ropt').forEach(x => x.classList.remove('sel'));
+    this.classList.add('sel');
+  });
+});
+
+// Date chips
+document.querySelectorAll('.dchip').forEach(d => {
+  d.addEventListener('click', function() {
+    this.closest('.date-scroll').querySelectorAll('.dchip').forEach(x => x.classList.remove('sel'));
+    this.classList.add('sel');
+  });
+});
+
+// Time chips
+document.querySelectorAll('.tchip').forEach(t => {
+  t.addEventListener('click', function() {
+    this.closest('.time-grid').querySelectorAll('.tchip').forEach(x => x.classList.remove('sel'));
+    this.classList.add('sel');
+  });
+});
+
+// Form submit
+function submitForm(btn) {
+  const name = document.querySelector('#sc-contact .inp[type="text"]').value;
+  const phone = document.querySelector('#sc-contact .inp[type="tel"]').value;
+  if (!phone) { btn.textContent = 'Укажите телефон'; btn.style.background = '#dc2626'; setTimeout(() => { btn.textContent = 'Отправить заявку'; btn.style.background = ''; }, 2000); return; }
+  btn.textContent = '✓ Заявка отправлена!';
+  btn.style.background = '#15632f';
+  // Send to API
+  fetch('/api/contacts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ category: 'miniapp-demo', phone, timestamp: new Date().toISOString() })
+  }).catch(() => {});
+  setTimeout(() => { btn.textContent = 'Отправить заявку'; btn.style.background = ''; }, 3000);
+}
+</script>
+</body>
+</html>

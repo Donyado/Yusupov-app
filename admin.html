@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - Контакты</title>
+    <style>
+        :root {
+            --primary-color: #0088cc;
+            --secondary-color: #2c3e50;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-color: #e9ecef;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .filters {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filters select, .filters input {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .filters button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .filters button:hover {
+            background: #0077b3;
+        }
+
+        table {
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        thead {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background-color: #f1f3f4;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .category-restaurant { background-color: #e74c3c; }
+        .category-retail { background-color: #3498db; }
+        .category-services { background-color: #f39c12; }
+        .category-education { background-color: #9b59b6; }
+        .category-healthcare { background-color: #2ecc71; }
+        .category-finance { background-color: #e67e22; }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--primary-color);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Админ-панель: Контакты</h1>
+            <p>Управление контактами, оставленными пользователями для связи</p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-contacts">0</div>
+                <div class="stat-label">Всего контактов</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="today-contacts">0</div>
+                <div class="stat-label">Сегодня</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="restaurant-contacts">0</div>
+                <div class="stat-label">Ресторанный бизнес</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="retail-contacts">0</div>
+                <div class="stat-label">Розничная торговля</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <select id="category-filter">
+                <option value="">Все категории</option>
+                <option value="restaurant">Ресторанный бизнес</option>
+                <option value="retail">Розничная торговля</option>
+                <option value="services">Услуги</option>
+                <option value="education">Образование</option>
+                <option value="healthcare">Медицина</option>
+                <option value="finance">Финансы</option>
+            </select>
+            <input type="date" id="date-filter">
+            <button onclick="loadContacts()">Применить фильтры</button>
+            <button onclick="clearFilters()">Сбросить</button>
+            <button onclick="exportToCSV()">Экспорт CSV</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Категория</th>
+                    <th>Телефон</th>
+                    <th>Дата</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody id="contacts-table-body">
+                <tr>
+                    <td colspan="5" class="loading">Загрузка контактов...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Load contacts on page load
+        document.addEventListener('DOMContentLoaded', loadContacts);
+
+        // Event listeners for filters
+        document.getElementById('category-filter').addEventListener('change', loadContacts);
+        document.getElementById('date-filter').addEventListener('change', loadContacts);
+
+        async function loadContacts() {
+            try {
+                const category = document.getElementById('category-filter').value;
+                const date = document.getElementById('date-filter').value;
+                
+                let url = '/api/contacts';
+                if (category) {
+                    url = `/api/contacts/category/${category}`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    const contacts = data.data;
+                    
+                    // Apply date filter if specified
+                    let filteredContacts = contacts;
+                    if (date) {
+                        filteredContacts = contacts.filter(contact => {
+                            const contactDate = new Date(contact.timestamp).toISOString().split('T')[0];
+                            return contactDate === date;
+                        });
+                    }
+
+                    renderContacts(filteredContacts);
+                    updateStats(contacts);
+                } else {
+                    throw new Error('Failed to load contacts');
+                }
+            } catch (error) {
+                console.error('Error loading contacts:', error);
+                document.getElementById('contacts-table-body').innerHTML = 
+                    '<tr><td colspan="5" class="empty-state">Ошибка загрузки контактов</td></tr>';
+            }
+        }
+
+        function renderContacts(contacts) {
+            const tbody = document.getElementById('contacts-table-body');
+            
+            if (contacts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Нет контактов</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = contacts.map(contact => `
+                <tr>
+                    <td>${contact.id}</td>
+                    <td>
+                        <span class="category-badge category-${contact.category}">
+                            ${getCategoryName(contact.category)}
+                        </span>
+                    </td>
+                    <td>${contact.phone}</td>
+                    <td>${formatDate(contact.timestamp)}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteContact('${contact.id}')">Удалить</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats(allContacts) {
+            const today = new Date().toISOString().split('T')[0];
+            const todayContacts = allContacts.filter(contact => {
+                const contactDate = new Date(contact.timestamp).toISOString().split('T')[0];
+                return contactDate === today;
+            });
+
+            const categoryCounts = {
+                restaurant: allContacts.filter(c => c.category === 'restaurant').length,
+                retail: allContacts.filter(c => c.category === 'retail').length
+            };
+
+            document.getElementById('total-contacts').textContent = allContacts.length;
+            document.getElementById('today-contacts').textContent = todayContacts.length;
+            document.getElementById('restaurant-contacts').textContent = categoryCounts.restaurant;
+            document.getElementById('retail-contacts').textContent = categoryCounts.retail;
+        }
+
+        async function deleteContact(id) {
+            if (!confirm('Вы уверены, что хотите удалить этот контакт?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/contacts/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Контакт удален');
+                    loadContacts(); // Reload contacts
+                } else {
+                    alert('Ошибка при удалении контакта');
+                }
+            } catch (error) {
+                console.error('Error deleting contact:', error);
+                alert('Ошибка при удалении контакта');
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('category-filter').value = '';
+            document.getElementById('date-filter').value = '';
+            loadContacts();
+        }
+
+        function exportToCSV() {
+            // This is a simple client-side CSV export
+            // In production, you might want to implement server-side export
+            const table = document.querySelector('table');
+            const rows = Array.from(table.querySelectorAll('tr'));
+            
+            let csv = '';
+            rows.forEach(row => {
+                const cells = Array.from(row.querySelectorAll('th, td'));
+                const rowData = cells.map(cell => {
+                    // Remove buttons and other non-text elements
+                    if (cell.querySelector('button')) {
+                        return '';
+                    }
+                    return `"${cell.textContent.trim()}"`;
+                }).join(',');
+                csv += rowData + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'contacts.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'restaurant': 'Ресторанный бизнес',
+                'retail': 'Розничная торговля',
+                'services': 'Услуги',
+                'education': 'Образование',
+                'healthcare': 'Медицина',
+                'finance': 'Финансы'
+            };
+            return names[category] || category;
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleString('ru-RU');
+        }
+    </script>
+</body>
+</html>
