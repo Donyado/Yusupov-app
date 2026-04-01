@@ -3,156 +3,163 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Yusupov Production — Мини-Аппы</title>
+<title>Yusupov Production</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --green:#1a7a3a;--green-h:#15632f;--green-l:rgba(26,122,58,.08);
-  --bg:#ffffff;--bg2:#f5f5f5;--bg3:#fafafa;
-  --text:#111111;--muted:#6b6b6b;--light:#999999;
-  --border:#e5e5e5;
-  --r:14px;--r-lg:20px;--r-xl:28px;
+  --g:#1a7a3a;--gh:#15632f;--gl:rgba(26,122,58,.08);
+  --bg:#fff;--bg2:#f5f5f5;--bg3:#fafafa;
+  --t:#111;--m:#6b6b6b;--l:#999;--b:#e5e5e5;
+  --r:14px;--rl:20px;--rx:28px;
 }
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;height:100vh;height:100dvh;}
-
-.app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--t);-webkit-font-smoothing:antialiased;overflow:hidden;height:100dvh;}
+.app{display:flex;flex-direction:column;height:100dvh;}
 .content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .content::-webkit-scrollbar{width:0;}
-
-/* ── COMMON ── */
 .pad{padding:0 16px;}
-.sec-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--light);margin-bottom:10px;}
-.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:600;background:var(--green-l);color:var(--green);}
+.sec-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--l);margin-bottom:10px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:600;background:var(--gl);color:var(--g);}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:var(--r);font-size:.88rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;font-family:inherit;width:100%;-webkit-tap-highlight-color:transparent;}
-.btn-g{background:var(--green);color:#fff;}
-.btn-g:active{background:var(--green-h);transform:scale(.98);}
-.btn-o{background:var(--bg);border:1.5px solid var(--border);color:var(--text);}
-.btn-o:active{background:var(--bg2);}
+.btn-g{background:var(--g);color:#fff;}.btn-g:active{background:var(--gh);transform:scale(.98);}
+.btn-o{background:var(--bg);border:1.5px solid var(--b);color:var(--t);}.btn-o:active{background:var(--bg2);}
 .btn-pill{border-radius:999px;}
 .btn-sm{padding:10px 18px;font-size:.82rem;}
+
+/* PAGE SYSTEM */
+.page{display:none;min-height:100%;}
+.page.on{display:block;}
+.sub-page{display:none;flex-direction:column;height:100%;}
+.sub-page.on{display:flex;}
+.sub-bar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--b);background:var(--bg);flex-shrink:0;}
+.sub-back{font-size:1.4rem;color:var(--g);cursor:pointer;padding:0 4px;line-height:1;-webkit-tap-highlight-color:transparent;}
+.sub-title{font-size:.9rem;font-weight:700;flex:1;}
+.sub-badge{background:var(--gl);color:var(--g);font-size:.6rem;font-weight:800;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px;}
+.sub-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.sub-body::-webkit-scrollbar{width:0;}
+.sub-cta{padding:10px 16px;border-top:1px solid var(--b);background:var(--bg);flex-shrink:0;padding-bottom:max(10px,env(safe-area-inset-bottom));}
+.sub-cta-row{display:flex;gap:8px;align-items:center;}
+.sub-cta-info{flex:1;}
+.sub-cta-label{font-size:.66rem;color:var(--l);}
+.sub-cta-price{font-size:.9rem;font-weight:800;color:var(--g);}
+
+/* Intro banner in demos */
+.intro-banner{background:var(--gl);margin:12px 16px;border-radius:var(--r);padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
+.intro-ico{font-size:1.2rem;flex-shrink:0;margin-top:1px;}
+.intro-txt{font-size:.78rem;color:var(--t);line-height:1.5;}
+.intro-txt strong{color:var(--g);}
 
 /* ═══════════════════════
    MAIN PAGE
    ═══════════════════════ */
-.main-page{display:block;}
-.main-page.hide{display:none;}
 
 /* Hero */
-.hero{background:linear-gradient(135deg,#0d3d1e,#1a7a3a);border-radius:0 0 var(--r-xl) var(--r-xl);padding:28px 20px 24px;color:#fff;}
-.hero-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
-.hero-logo{width:52px;height:52px;border-radius:12px;}
-.hero-co{font-size:1.05rem;font-weight:800;}
-.hero-tag{font-size:.72rem;opacity:.7;margin-top:2px;}
-.hero-desc{font-size:.8rem;opacity:.88;line-height:1.6;margin-bottom:16px;}
+.hero{background:linear-gradient(135deg,#0d3d1e,#1a7a3a);border-radius:0 0 var(--rx) var(--rx);padding:24px 20px 22px;color:#fff;}
+.hero-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.hero-logo{width:50px;height:50px;border-radius:12px;}
+.hero-co{font-size:1.02rem;font-weight:800;}
+.hero-tag{font-size:.7rem;opacity:.7;margin-top:2px;}
+.hero-desc{font-size:.78rem;opacity:.85;line-height:1.6;margin-bottom:14px;}
 .hero-stats{display:flex;gap:8px;}
-.hs{flex:1;background:rgba(255,255,255,.12);border-radius:10px;padding:10px 6px;text-align:center;}
-.hs-n{font-size:1rem;font-weight:800;}
-.hs-l{font-size:.6rem;opacity:.8;margin-top:1px;}
+.hs{flex:1;background:rgba(255,255,255,.12);border-radius:10px;padding:9px 5px;text-align:center;}
+.hs-n{font-size:.95rem;font-weight:800;}
+.hs-l{font-size:.58rem;opacity:.8;}
 
-/* Portfolio heading */
-.port-head{padding:20px 16px 4px;}
-.port-title{font-size:1.15rem;font-weight:800;margin-bottom:4px;}
-.port-sub{font-size:.82rem;color:var(--muted);line-height:1.5;}
+/* Onboarding card */
+.onboard{margin:14px 16px 0;background:linear-gradient(135deg,#0d3d1e,#1a6b3a);border-radius:var(--rl);padding:16px;color:#fff;display:flex;align-items:center;gap:12px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.onboard:active{opacity:.9;}
+.onboard-ico{font-size:1.6rem;}
+.onboard-title{font-size:.88rem;font-weight:700;}
+.onboard-sub{font-size:.72rem;opacity:.75;margin-top:2px;}
+.onboard-arrow{font-size:1rem;opacity:.6;margin-left:auto;}
 
-/* Mini-app cards grid */
-.demos-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px;}
-.demo-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:16px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .2s;position:relative;overflow:hidden;}
-.demo-card:active{transform:scale(.97);border-color:var(--green);}
-.dc-ico{font-size:2rem;margin-bottom:8px;}
-.dc-name{font-size:.88rem;font-weight:700;margin-bottom:3px;}
-.dc-desc{font-size:.7rem;color:var(--muted);line-height:1.4;margin-bottom:8px;}
-.dc-link{font-size:.72rem;color:var(--green);font-weight:700;display:flex;align-items:center;gap:4px;}
-.dc-soon{position:absolute;top:8px;right:8px;background:var(--bg2);color:var(--light);font-size:.6rem;font-weight:600;padding:2px 8px;border-radius:999px;}
+/* Services grid */
+.tasks-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px;}
+.task{background:var(--bg3);border:1px solid var(--b);border-radius:12px;padding:12px;display:flex;align-items:center;gap:8px;font-size:.78rem;font-weight:500;transition:all .15s;}
+.task-ico{font-size:1.1rem;flex-shrink:0;}
 
-/* Services */
-.srv-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--bg2);}
-.srv-item:last-child{border:none;}
-.srv-ico-box{width:40px;height:40px;border-radius:10px;background:var(--green-l);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
-.srv-name{font-size:.84rem;font-weight:600;}
-.srv-d{font-size:.72rem;color:var(--muted);margin-top:1px;}
-
-/* Partners */
-.ptags-row{display:flex;flex-wrap:wrap;gap:6px;}
-.ptag{background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:6px 14px;font-size:.76rem;font-weight:600;}
-
-/* Sphere scroll */
+/* Spheres */
 .sphere-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 16px 4px;-webkit-overflow-scrolling:touch;}
 .sphere-scroll::-webkit-scrollbar{display:none;}
-.sp-pill{background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:8px 16px;font-size:.78rem;font-weight:500;white-space:nowrap;flex-shrink:0;}
+.sp{background:var(--bg);border:1px solid var(--b);border-radius:999px;padding:8px 15px;font-size:.78rem;font-weight:500;white-space:nowrap;flex-shrink:0;}
+
+/* Portfolio */
+.port-card{background:var(--bg);border:1.5px solid var(--b);border-radius:var(--rl);padding:14px;margin-bottom:12px;display:flex;gap:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .2s;}
+.port-card:active{transform:scale(.98);border-color:var(--g);}
+
+/* Animated phone preview */
+.prev-phone{width:100px;height:176px;background:#1c1c1e;border-radius:16px;padding:4px;flex-shrink:0;}
+.prev-screen{background:#fff;border-radius:13px;height:100%;overflow:hidden;position:relative;}
+.prev-strip{animation:prev-scroll 7s ease-in-out infinite;}
+@keyframes prev-scroll{0%,12%{transform:translateY(0)}32%,44%{transform:translateY(-50px)}64%,76%{transform:translateY(-100px)}92%,100%{transform:translateY(0)}}
+.prev-bar{padding:8px 6px 6px;font-size:.42rem;font-weight:700;color:#fff;text-align:center;}
+.prev-pills{display:flex;gap:2px;padding:2px 4px;overflow:hidden;}
+.prev-pill{background:#eee;border-radius:6px;padding:1px 5px;font-size:.35rem;white-space:nowrap;}
+.prev-pill.act{background:var(--g);color:#fff;}
+.prev-item{margin:3px 4px;background:#f5f5f5;border-radius:6px;padding:5px;font-size:.38rem;color:#333;display:flex;gap:4px;align-items:center;}
+.prev-item-ico{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.5rem;flex-shrink:0;}
+
+.port-info{flex:1;display:flex;flex-direction:column;justify-content:center;}
+.port-badge{display:inline-block;background:var(--gl);color:var(--g);font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-bottom:6px;width:fit-content;}
+.port-name{font-size:.95rem;font-weight:800;margin-bottom:4px;}
+.port-desc{font-size:.74rem;color:var(--m);line-height:1.5;margin-bottom:8px;}
+.port-link{font-size:.76rem;color:var(--g);font-weight:700;display:flex;align-items:center;gap:4px;}
+
+/* Demo type cards */
+.demos-scroll{display:flex;gap:10px;overflow-x:auto;padding:0 16px 4px;-webkit-overflow-scrolling:touch;}
+.demos-scroll::-webkit-scrollbar{display:none;}
+.demo-card{min-width:120px;background:var(--bg);border:1.5px solid var(--b);border-radius:var(--rl);padding:14px 12px;text-align:center;flex-shrink:0;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .2s;}
+.demo-card:active{transform:scale(.97);border-color:var(--g);}
+.dc-ico{font-size:1.6rem;margin-bottom:5px;}
+.dc-name{font-size:.78rem;font-weight:700;margin-bottom:2px;}
+.dc-link{font-size:.65rem;color:var(--g);font-weight:600;}
+
+/* Partners */
+.ptags{display:flex;flex-wrap:wrap;gap:6px;}
+.ptag{background:var(--bg);border:1px solid var(--b);border-radius:999px;padding:6px 14px;font-size:.76rem;font-weight:600;}
 
 /* Social */
 .soc-row{display:flex;gap:8px;flex-wrap:wrap;}
-.soc-btn{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:8px 14px;font-size:.76rem;font-weight:500;color:var(--text);text-decoration:none;-webkit-tap-highlight-color:transparent;}
+.soc-btn{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--b);border-radius:999px;padding:8px 14px;font-size:.78rem;font-weight:500;color:var(--t);text-decoration:none;}
 
-/* ═══════════════════════
-   DEMO PAGES (overlays)
-   ═══════════════════════ */
-.demo-page{display:none;flex-direction:column;height:100%;}
-.demo-page.show{display:flex;}
-
-/* Demo top bar */
-.demo-bar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;}
-.demo-back{font-size:1.4rem;color:var(--green);cursor:pointer;-webkit-tap-highlight-color:transparent;padding:0 4px;line-height:1;}
-.demo-bar-title{font-size:.9rem;font-weight:700;flex:1;}
-.demo-badge{background:var(--green-l);color:var(--green);font-size:.62rem;font-weight:800;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px;}
-
-/* Demo content */
-.demo-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.demo-body::-webkit-scrollbar{width:0;}
-
-/* Demo bottom CTA */
-.demo-cta{padding:10px 16px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0;padding-bottom:max(10px,env(safe-area-inset-bottom));}
-.demo-cta-row{display:flex;gap:8px;}
-.demo-cta-info{flex:1;}
-.demo-cta-label{font-size:.68rem;color:var(--light);margin-bottom:2px;}
-.demo-cta-price{font-size:.92rem;font-weight:800;color:var(--green);}
-
-/* Demo intro banner */
-.demo-intro{background:var(--green-l);margin:12px 16px;border-radius:var(--r);padding:12px 14px;display:flex;align-items:flex-start;gap:10px;}
-.demo-intro-ico{font-size:1.3rem;flex-shrink:0;margin-top:1px;}
-.demo-intro-text{font-size:.78rem;color:var(--text);line-height:1.5;}
-.demo-intro-text strong{color:var(--green);}
-
-/* ── CATALOG DEMO ── */
+/* ═══ SHARED DEMO/PROJECT STYLES ═══ */
 .search-wrap{padding:0 16px;}
-.search-inp{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:10px 14px;font-size:.84rem;font-family:inherit;outline:none;transition:border-color .2s;}
-.search-inp:focus{border-color:var(--green);}
+.search-inp{width:100%;background:var(--bg2);border:1px solid var(--b);border-radius:12px;padding:10px 14px;font-size:.84rem;font-family:inherit;outline:none;}
+.search-inp:focus{border-color:var(--g);}
 .filter-scroll{display:flex;gap:6px;overflow-x:auto;padding:10px 16px;-webkit-overflow-scrolling:touch;}
 .filter-scroll::-webkit-scrollbar{display:none;}
 .fpill{background:var(--bg2);border:none;border-radius:999px;padding:7px 14px;font-size:.76rem;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:inherit;-webkit-tap-highlight-color:transparent;transition:all .15s;}
-.fpill.on{background:var(--green);color:#fff;}
+.fpill.on{background:var(--g);color:#fff;}
 .svc-list{padding:6px 16px 12px;}
-.svc-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;transition:all .2s;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.svc-card:active{transform:scale(.98);border-color:var(--green);}
+.svc-card{background:var(--bg);border:1px solid var(--b);border-radius:var(--rl);padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;}
 .svc-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
-.ico-g{background:#dcfce7;}.ico-b{background:#dbeafe;}.ico-p{background:#ede9fe;}.ico-a{background:#fef3c7;}
+.ico-g{background:#dcfce7;}.ico-b{background:#dbeafe;}.ico-p{background:#ede9fe;}.ico-a{background:#fef3c7;}.ico-r{background:#fee2e2;}
 .svc-n{font-size:.88rem;font-weight:700;margin-bottom:2px;}
-.svc-desc{font-size:.74rem;color:var(--muted);}
-.svc-price{font-size:.92rem;font-weight:800;color:var(--green);}
-.svc-sub{font-size:.65rem;color:var(--light);}
+.svc-desc{font-size:.74rem;color:var(--m);}
+.svc-price{font-size:.92rem;font-weight:800;color:var(--g);}
+.svc-sub{font-size:.65rem;color:var(--l);}
 
-/* ── BOOKING DEMO ── */
+/* Booking */
 .book-body{padding:0 16px 16px;}
 .radio-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
-.ropt{display:flex;align-items:center;gap:10px;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;cursor:pointer;font-size:.84rem;transition:all .15s;-webkit-tap-highlight-color:transparent;}
-.ropt.sel{border-color:var(--green);background:var(--green-l);}
-.rdot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all .15s;}
-.ropt.sel .rdot{border-color:var(--green);background:var(--green);box-shadow:inset 0 0 0 3px #fff;}
+.ropt{display:flex;align-items:center;gap:10px;background:var(--bg);border:1.5px solid var(--b);border-radius:12px;padding:12px 14px;cursor:pointer;font-size:.84rem;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.ropt.sel{border-color:var(--g);background:var(--gl);}
+.rdot{width:16px;height:16px;border-radius:50%;border:2px solid var(--b);flex-shrink:0;transition:all .15s;}
+.ropt.sel .rdot{border-color:var(--g);background:var(--g);box-shadow:inset 0 0 0 3px #fff;}
 .date-scroll{display:flex;gap:6px;overflow-x:auto;margin-bottom:16px;-webkit-overflow-scrolling:touch;}
 .date-scroll::-webkit-scrollbar{display:none;}
-.dchip{background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:8px 12px;text-align:center;cursor:pointer;min-width:54px;flex-shrink:0;-webkit-tap-highlight-color:transparent;transition:all .15s;}
-.dchip.sel{background:var(--green);border-color:var(--green);color:#fff;}
+.dchip{background:var(--bg);border:1.5px solid var(--b);border-radius:12px;padding:8px 12px;text-align:center;cursor:pointer;min-width:54px;flex-shrink:0;-webkit-tap-highlight-color:transparent;transition:all .15s;}
+.dchip.sel{background:var(--g);border-color:var(--g);color:#fff;}
 .dchip-d{font-size:.6rem;opacity:.65;font-weight:500;}
 .dchip-n{font-size:.92rem;font-weight:700;}
 .time-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
-.tchip{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-size:.82rem;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;}
-.tchip.sel{background:var(--green);border-color:var(--green);color:#fff;}
+.tchip{background:var(--bg);border:1.5px solid var(--b);border-radius:10px;padding:8px 14px;font-size:.82rem;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;}
+.tchip.sel{background:var(--g);border-color:var(--g);color:#fff;}
 
-/* ── LOYALTY DEMO ── */
-.bonus-card{margin:0 16px 12px;border-radius:var(--r-xl);padding:22px 18px;color:#fff;background:linear-gradient(135deg,#0d3d1e,#1a7a3a);position:relative;overflow:hidden;}
+/* Loyalty */
+.bonus-card{margin:0 16px 12px;border-radius:var(--rx);padding:22px 18px;color:#fff;background:linear-gradient(135deg,#0d3d1e,#1a7a3a);position:relative;overflow:hidden;}
 .bonus-card::after{content:'YP';position:absolute;right:-4px;bottom:-18px;font-size:5rem;font-weight:900;opacity:.06;}
 .bc-lvl{font-size:.68rem;background:rgba(255,255,255,.14);display:inline-block;padding:3px 12px;border-radius:999px;margin-bottom:6px;}
 .bc-name{font-size:.92rem;font-weight:700;margin-bottom:2px;}
@@ -165,464 +172,344 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .hist-list{padding:0 16px;}
 .hrow{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--bg2);gap:8px;}
 .hrow:last-child{border:none;}
-.hrow-info{flex:1;}
-.hrow-name{font-size:.82rem;font-weight:600;}
-.hrow-dt{font-size:.65rem;color:var(--light);}
-.hpts{font-size:.88rem;font-weight:700;}
-.hp{color:var(--green);}.hm{color:#dc2626;}
+.hrow-info{flex:1;}.hrow-name{font-size:.82rem;font-weight:600;}.hrow-dt{font-size:.65rem;color:var(--l);}
+.hpts{font-size:.88rem;font-weight:700;}.hp{color:var(--g);}.hm{color:#dc2626;}
 
-/* ── AFFILIATE DEMO ── */
-.aff-body{padding:0 16px 16px;}
-.ref-box{background:#fffbeb;border:1px solid #fde68a;border-radius:var(--r);padding:12px;margin-bottom:14px;}
-.ref-lbl{font-size:.68rem;color:var(--muted);margin-bottom:3px;}
-.ref-val{font-size:.82rem;color:#b45309;font-weight:600;word-break:break-all;margin-bottom:8px;}
-.btn-amber{background:#d97706;color:#fff;}
-.btn-amber:active{background:#b45309;}
-.aff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
-.abox{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:12px 8px;text-align:center;}
-.abox-n{font-size:1.2rem;font-weight:800;color:#d97706;}
-.abox-l{font-size:.65rem;color:var(--muted);}
-.pay-list{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-.prow{display:flex;align-items:center;padding:10px 12px;border-bottom:1px solid var(--bg2);font-size:.8rem;}
-.prow:last-child{border:none;}
-.pamt{font-weight:700;color:var(--green);margin-left:auto;}
-.pdot{width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:6px;}
-
-/* ── FORM DEMO ── */
+/* Form */
 .form-body{padding:0 16px 16px;}
 .fg{margin-bottom:12px;}
-.fl{display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:5px;}
-.inp{width:100%;height:48px;border:1px solid var(--border);border-radius:var(--r);padding:0 16px;font-size:.88rem;font-family:inherit;background:var(--bg3);outline:none;transition:border-color .2s;}
-.inp:focus{border-color:var(--green);}
-.ta{width:100%;min-height:80px;border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;font-size:.88rem;font-family:inherit;background:var(--bg3);outline:none;resize:vertical;}
-.ta:focus{border-color:var(--green);}
+.fl{display:block;font-size:.78rem;font-weight:600;color:var(--m);margin-bottom:5px;}
+.inp{width:100%;height:48px;border:1px solid var(--b);border-radius:var(--r);padding:0 16px;font-size:.88rem;font-family:inherit;background:var(--bg3);outline:none;}
+.inp:focus{border-color:var(--g);}
+.ta{width:100%;min-height:80px;border:1px solid var(--b);border-radius:var(--r);padding:12px 16px;font-size:.88rem;font-family:inherit;background:var(--bg3);outline:none;resize:vertical;}
+.ta:focus{border-color:var(--g);}
+
+/* Affiliate */
+.aff-body{padding:0 16px 16px;}
+.ref-box{background:#fffbeb;border:1px solid #fde68a;border-radius:var(--r);padding:12px;margin-bottom:14px;}
+.ref-lbl{font-size:.68rem;color:var(--m);margin-bottom:3px;}
+.ref-val{font-size:.82rem;color:#b45309;font-weight:600;word-break:break-all;margin-bottom:8px;}
+.btn-amber{background:#d97706;color:#fff;}.btn-amber:active{background:#b45309;}
+.aff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.abox{background:var(--bg);border:1px solid var(--b);border-radius:var(--r);padding:12px 8px;text-align:center;}
+.abox-n{font-size:1.2rem;font-weight:800;color:#d97706;}.abox-l{font-size:.65rem;color:var(--m);}
+.pay-list{background:var(--bg);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;}
+.prow{display:flex;align-items:center;padding:10px 12px;border-bottom:1px solid var(--bg2);font-size:.8rem;}
+.prow:last-child{border:none;}
+.pamt{font-weight:700;color:var(--g);margin-left:auto;}
+.pdot{width:7px;height:7px;border-radius:50%;background:var(--g);margin-left:6px;}
+
+/* Project bottom nav */
+.proj-nav{display:flex;border-top:1px solid var(--b);background:var(--bg);flex-shrink:0;padding-bottom:max(2px,env(safe-area-inset-bottom));}
+.pni{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 0 4px;cursor:pointer;}
+.pni-ico{font-size:1.15rem;line-height:1.2;}
+.pni-lbl{font-size:.58rem;color:var(--l);margin-top:1px;}
+.pni.on .pni-lbl{color:var(--g);font-weight:700;}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="content" id="content">
+<div class="content" id="content">
 
-    <!-- ═══════════════════════
-         MAIN PAGE (portfolio)
-         ═══════════════════════ -->
-    <div class="main-page" id="main-page">
+<!-- ═══ MAIN PAGE ═══ -->
+<div class="page on" id="pg-main">
 
-      <!-- Hero -->
-      <div class="hero">
-        <div class="hero-row">
-          <img src="logo.png" class="hero-logo" alt="YP">
-          <div>
-            <div class="hero-co">Yusupov Production</div>
-            <div class="hero-tag">Сертифицированный партнёр amoCRM</div>
+  <div class="hero">
+    <div class="hero-row">
+      <img src="logo.png" class="hero-logo" alt="YP">
+      <div><div class="hero-co">Yusupov Production</div><div class="hero-tag">Сертифицированный партнёр amoCRM</div></div>
+    </div>
+    <div class="hero-desc">Внедряем CRM-системы, подключаем интеграции и разрабатываем мини-аппы для Telegram. Ниже — наши услуги и примеры реализованных проектов.</div>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-n">120+</div><div class="hs-l">Проектов</div></div>
+      <div class="hs"><div class="hs-n">5+</div><div class="hs-l">Лет</div></div>
+      <div class="hs"><div class="hs-n">24/7</div><div class="hs-l">Поддержка</div></div>
+    </div>
+  </div>
+
+  <!-- Onboarding -->
+  <div class="onboard" onclick="openSub('demo-form')">
+    <div class="onboard-ico">🚀</div>
+    <div><div class="onboard-title">Оставить заявку</div><div class="onboard-sub">Обсудим ваш проект бесплатно</div></div>
+    <div class="onboard-arrow">›</div>
+  </div>
+
+  <!-- Services -->
+  <div class="pad" style="margin-top:20px"><div class="sec-lbl">Что мы делаем</div></div>
+  <div class="tasks-grid">
+    <div class="task"><span class="task-ico">📊</span>Настройка воронок</div>
+    <div class="task"><span class="task-ico">📞</span>Телефония</div>
+    <div class="task"><span class="task-ico">💬</span>WhatsApp / Telegram</div>
+    <div class="task"><span class="task-ico">📋</span>Документооборот</div>
+    <div class="task"><span class="task-ico">🔀</span>Распределение заявок</div>
+    <div class="task"><span class="task-ico">📑</span>Выгрузка в таблицы</div>
+    <div class="task"><span class="task-ico">📱</span>Мини-аппы для TG</div>
+    <div class="task"><span class="task-ico">🤖</span>ИИ-ассистент</div>
+    <div class="task"><span class="task-ico">📈</span>Аналитика и отчёты</div>
+    <div class="task"><span class="task-ico">🛠️</span>Техподдержка</div>
+  </div>
+
+  <!-- Spheres -->
+  <div class="pad" style="margin-top:20px"><div class="sec-lbl">Работаем с любыми нишами</div></div>
+  <div class="sphere-scroll">
+    <div class="sp">🏗️ Строительство домов и бань</div>
+    <div class="sp">🛁 СПА и wellness</div>
+    <div class="sp">✈️ Туризм</div>
+    <div class="sp">🦷 Медицина</div>
+    <div class="sp">🍕 Рестораны</div>
+    <div class="sp">💄 Красота</div>
+    <div class="sp">🏋️ Фитнес</div>
+    <div class="sp">📚 Образование</div>
+    <div class="sp">🛒 Торговля</div>
+    <div class="sp">🚗 Автосервис</div>
+    <div class="sp">🏠 Недвижимость</div>
+  </div>
+
+  <!-- Portfolio -->
+  <div class="pad" style="margin-top:24px"><div class="sec-lbl">Наши разработки</div></div>
+  <div class="pad">
+
+    <!-- Project: Строим Бани -->
+    <div class="port-card" onclick="openSub('proj-bani')">
+      <div class="prev-phone">
+        <div class="prev-screen">
+          <div class="prev-strip">
+            <div class="prev-bar" style="background:linear-gradient(135deg,#1a4a2e,#2d8a52)">Строим Бани</div>
+            <div class="prev-pills"><span class="prev-pill act">Все</span><span class="prev-pill">Бани</span><span class="prev-pill">Дома</span></div>
+            <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏠</span>Баня "Классик" · 450 000₽</div>
+            <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏠</span>Баня "Стандарт" · 650 000₽</div>
+            <div class="prev-item"><span class="prev-item-ico" style="background:#dbeafe">🏗️</span>Дом "Комфорт" · 1.2 млн₽</div>
+            <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏠</span>Баня "Премиум" · 850 000₽</div>
+            <div class="prev-item"><span class="prev-item-ico" style="background:#fef3c7">🪵</span>Беседка "Уют" · 180 000₽</div>
           </div>
         </div>
-        <div class="hero-desc">Разрабатываем мини-аппы для Telegram и интегрируем их с amoCRM. Ниже — примеры того, что мы можем сделать для вашего бизнеса.</div>
-        <div class="hero-stats">
-          <div class="hs"><div class="hs-n">120+</div><div class="hs-l">Проектов</div></div>
-          <div class="hs"><div class="hs-n">5+</div><div class="hs-l">Лет</div></div>
-          <div class="hs"><div class="hs-n">24/7</div><div class="hs-l">Поддержка</div></div>
-        </div>
       </div>
-
-      <!-- Portfolio section -->
-      <div class="port-head">
-        <div class="port-title">Посмотрите примеры мини-аппов</div>
-        <div class="port-sub">Нажмите на карточку — откроется демо. Каждый тип можно адаптировать под ваш бизнес.</div>
-      </div>
-
-      <div class="demos-grid">
-        <div class="demo-card" onclick="openDemo('catalog')">
-          <div class="dc-ico">📋</div>
-          <div class="dc-name">Каталог</div>
-          <div class="dc-desc">Товары и услуги с поиском и фильтрами</div>
-          <div class="dc-link">Открыть демо →</div>
-        </div>
-        <div class="demo-card" onclick="openDemo('booking')">
-          <div class="dc-ico">📅</div>
-          <div class="dc-name">Запись</div>
-          <div class="dc-desc">Онлайн-запись с выбором даты и времени</div>
-          <div class="dc-link">Открыть демо →</div>
-        </div>
-        <div class="demo-card" onclick="openDemo('loyalty')">
-          <div class="dc-ico">🏆</div>
-          <div class="dc-name">Лояльность</div>
-          <div class="dc-desc">Баллы, уровни, бонусная программа</div>
-          <div class="dc-link">Открыть демо →</div>
-        </div>
-        <div class="demo-card" onclick="openDemo('affiliate')">
-          <div class="dc-ico">🤝</div>
-          <div class="dc-name">Партнёрка</div>
-          <div class="dc-desc">Реферальная программа с выплатами</div>
-          <div class="dc-link">Открыть демо →</div>
-        </div>
-        <div class="demo-card" onclick="openDemo('form')">
-          <div class="dc-ico">📝</div>
-          <div class="dc-name">Форма заявки</div>
-          <div class="dc-desc">Лидогенерация с передачей в CRM</div>
-          <div class="dc-link">Открыть демо →</div>
-        </div>
-        <div class="demo-card" style="opacity:.6;pointer-events:none">
-          <div class="dc-soon">Скоро</div>
-          <div class="dc-ico">🛒</div>
-          <div class="dc-name">Магазин</div>
-          <div class="dc-desc">Корзина и оплата в Telegram</div>
-        </div>
-      </div>
-
-      <!-- Sphere -->
-      <div class="pad" style="margin-top:8px"><div class="sec-lbl">Адаптируем под вашу сферу</div></div>
-      <div class="sphere-scroll">
-        <div class="sp-pill">🛁 Бани и СПА</div>
-        <div class="sp-pill">✈️ Туризм</div>
-        <div class="sp-pill">🦷 Медицина</div>
-        <div class="sp-pill">🍕 Рестораны</div>
-        <div class="sp-pill">💄 Красота</div>
-        <div class="sp-pill">🏋️ Фитнес</div>
-        <div class="sp-pill">📚 Образование</div>
-        <div class="sp-pill">🛒 Торговля</div>
-        <div class="sp-pill">🚗 Автосервис</div>
-      </div>
-
-      <!-- Services -->
-      <div class="pad" style="margin-top:20px">
-        <div class="sec-lbl">Наши услуги</div>
-        <div class="srv-item"><div class="srv-ico-box">⚙️</div><div><div class="srv-name">Внедрение amoCRM</div><div class="srv-d">Настройка и автоматизация воронки</div></div></div>
-        <div class="srv-item"><div class="srv-ico-box">🔌</div><div><div class="srv-name">Интеграции</div><div class="srv-d">Телефония, WhatsApp, мессенджеры</div></div></div>
-        <div class="srv-item"><div class="srv-ico-box">📱</div><div><div class="srv-name">Мини-аппы для Telegram</div><div class="srv-d">Каталоги, запись, лояльность, магазины</div></div></div>
-        <div class="srv-item"><div class="srv-ico-box">🤖</div><div><div class="srv-name">ИИ внутри CRM</div><div class="srv-d">GPT-ассистент для менеджеров</div></div></div>
-        <div class="srv-item"><div class="srv-ico-box">📊</div><div><div class="srv-name">Аналитика</div><div class="srv-d">Дашборды и отчёты по продажам</div></div></div>
-      </div>
-
-      <!-- Partners -->
-      <div class="pad" style="margin-top:16px">
-        <div class="sec-lbl">Официальные партнёры</div>
-        <div class="ptags-row">
-          <span class="ptag">amoCRM</span><span class="ptag">Radist.Online</span>
-          <span class="ptag">Wazzup</span><span class="ptag">Команда F5</span>
-          <span class="ptag">Sipuni/UIS</span><span class="ptag">Генезис</span>
-        </div>
-      </div>
-
-      <!-- Social -->
-      <div class="pad" style="margin-top:16px">
-        <div class="sec-lbl">Социальные сети</div>
-        <div class="soc-row">
-          <a href="https://instagram.com/yusupovv_lenar" class="soc-btn" target="_blank">📸 Instagram</a>
-          <a href="https://t.me/yusupov_pro" class="soc-btn" target="_blank">💬 Telegram</a>
-          <a href="https://vk.com/lenar_yus" class="soc-btn" target="_blank">📘 ВКонтакте</a>
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <div class="pad" style="margin-top:20px;padding-bottom:16px;">
-        <a href="https://t.me/yusupov_pro" style="text-decoration:none">
-          <button class="btn btn-g btn-pill">💬 Обсудить проект</button>
-        </a>
+      <div class="port-info">
+        <div class="port-badge">Строительство</div>
+        <div class="port-name">Строим Бани</div>
+        <div class="port-desc">Каталог бань и домов с фильтрацией, заявками и интеграцией amoCRM</div>
+        <div class="port-link">Посмотреть приложение →</div>
       </div>
     </div>
 
-    <!-- ═══════════════════════
-         DEMO: CATALOG
-         ═══════════════════════ -->
-    <div class="demo-page" id="demo-catalog">
-      <div class="demo-bar">
-        <span class="demo-back" onclick="closeDemo()">‹</span>
-        <span class="demo-bar-title">Каталог товаров</span>
-        <span class="demo-badge">демо</span>
-      </div>
-      <div class="demo-body">
-        <div class="demo-intro">
-          <div class="demo-intro-ico">📋</div>
-          <div class="demo-intro-text">Это пример мини-аппа <strong>«Каталог»</strong>. Клиент находит товар или услугу, смотрит цену и оставляет заявку — всё прямо в Telegram.</div>
-        </div>
-        <div class="search-wrap"><input class="search-inp" type="text" placeholder="🔍  Поиск услуг..."></div>
-        <div class="filter-scroll">
-          <button class="fpill on">Все</button>
-          <button class="fpill">Внедрение</button>
-          <button class="fpill">Интеграции</button>
-          <button class="fpill">Мини-аппы</button>
-          <button class="fpill">ИИ</button>
-        </div>
-        <div class="svc-list">
-          <div class="svc-card">
-            <div class="svc-ico ico-g">⚙️</div>
-            <div style="flex:1"><div class="svc-n">amoCRM Base</div><div class="svc-desc">Базовое внедрение и настройка</div></div>
-            <div style="text-align:right"><div class="svc-price">30 000₽</div><div class="svc-sub">от 5 дней</div></div>
-          </div>
-          <div class="svc-card">
-            <div class="svc-ico ico-g">🚀</div>
-            <div style="flex:1"><div class="svc-n">amoCRM Pro</div><div class="svc-desc">Полная автоматизация воронки</div></div>
-            <div style="text-align:right"><div class="svc-price">75 000₽</div><div class="svc-sub">от 14 дней</div></div>
-          </div>
-          <div class="svc-card">
-            <div class="svc-ico ico-b">🔌</div>
-            <div style="flex:1"><div class="svc-n">WhatsApp интеграция</div><div class="svc-desc">Wazzup / Radist.Online</div></div>
-            <div style="text-align:right"><div class="svc-price">15 000₽</div><div class="svc-sub">от 2 дней</div></div>
-          </div>
-          <div class="svc-card">
-            <div class="svc-ico ico-p">📱</div>
-            <div style="flex:1"><div class="svc-n">Мини-апп Каталог</div><div class="svc-desc">Telegram Mini App</div></div>
-            <div style="text-align:right"><div class="svc-price">25 000₽</div><div class="svc-sub">от 7 дней</div></div>
-          </div>
-          <div class="svc-card">
-            <div class="svc-ico ico-a">🤖</div>
-            <div style="flex:1"><div class="svc-n">ИИ-ассистент в CRM</div><div class="svc-desc">GPT внутри amoCRM</div></div>
-            <div style="text-align:right"><div class="svc-price">40 000₽</div><div class="svc-sub">от 10 дней</div></div>
+    <!-- Project: Тур Каталог -->
+    <div class="port-card" onclick="openSub('proj-tours')">
+      <div class="prev-phone">
+        <div class="prev-screen">
+          <div class="prev-strip" style="animation-delay:-3s">
+            <div class="prev-bar" style="background:linear-gradient(135deg,#1e3a5f,#3b82f6)">Туры Вкайф</div>
+            <div class="prev-pills"><span class="prev-pill act">Все</span><span class="prev-pill">Казань</span><span class="prev-pill">СПб</span></div>
+            <div class="prev-item"><span class="prev-item-ico" style="background:#dbeafe">🏛️</span>Казань · от 14 900₽</div>
+            <div class="prev-item"><span class="prev-item-ico" style="background:#ede9fe">🌊</span>Санкт-Петербург · от 32 500₽</div>
+            <div class="prev-item"><span class="prev-item-ico" style="background:#fef3c7">🏔️</span>Дагестан · от 28 000₽</div>
+            <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏛️</span>Москва · от 18 500₽</div>
+            <div class="prev-item"><span class="prev-item-ico" style="background:#fee2e2">⛰️</span>Алтай · от 35 000₽</div>
           </div>
         </div>
       </div>
-      <div class="demo-cta">
-        <div class="demo-cta-row">
-          <div class="demo-cta-info">
-            <div class="demo-cta-label">Стоимость разработки</div>
-            <div class="demo-cta-price">от 25 000₽</div>
-          </div>
-          <a href="https://t.me/yusupov_pro" style="text-decoration:none;flex:1">
-            <button class="btn btn-g btn-sm btn-pill">Хочу такой →</button>
-          </a>
-        </div>
+      <div class="port-info">
+        <div class="port-badge">Туризм</div>
+        <div class="port-name">Туры Вкайф</div>
+        <div class="port-desc">Каталог туров с бонусной программой, профилем клиента и онлайн-оплатой</div>
+        <div class="port-link">Посмотреть приложение →</div>
       </div>
     </div>
+  </div>
 
-    <!-- ═══════════════════════
-         DEMO: BOOKING
-         ═══════════════════════ -->
-    <div class="demo-page" id="demo-booking">
-      <div class="demo-bar">
-        <span class="demo-back" onclick="closeDemo()">‹</span>
-        <span class="demo-bar-title">Запись на услуги</span>
-        <span class="demo-badge">демо</span>
-      </div>
-      <div class="demo-body">
-        <div class="demo-intro">
-          <div class="demo-intro-ico">📅</div>
-          <div class="demo-intro-text">Пример <strong>«Записи на услуги»</strong>. Клиент выбирает услугу, дату и время — запись автоматически попадает в CRM.</div>
-        </div>
-        <div class="book-body">
-          <div class="sec-lbl">Выберите услугу</div>
-          <div class="radio-list">
-            <div class="ropt sel"><div class="rdot"></div>Внедрение amoCRM</div>
-            <div class="ropt"><div class="rdot"></div>Интеграция мессенджеров</div>
-            <div class="ropt"><div class="rdot"></div>Техническое сопровождение</div>
-            <div class="ropt"><div class="rdot"></div>Разработка мини-аппа</div>
-          </div>
-          <div class="sec-lbl">Выберите дату</div>
-          <div class="date-scroll">
-            <div class="dchip"><div class="dchip-d">Пт</div><div class="dchip-n">28</div></div>
-            <div class="dchip sel"><div class="dchip-d">Пн</div><div class="dchip-n">31</div></div>
-            <div class="dchip"><div class="dchip-d">Вт</div><div class="dchip-n">1</div></div>
-            <div class="dchip"><div class="dchip-d">Ср</div><div class="dchip-n">2</div></div>
-            <div class="dchip"><div class="dchip-d">Чт</div><div class="dchip-n">3</div></div>
-            <div class="dchip"><div class="dchip-d">Пт</div><div class="dchip-n">4</div></div>
-          </div>
-          <div class="sec-lbl">Выберите время</div>
-          <div class="time-grid">
-            <span class="tchip">10:00</span><span class="tchip sel">11:00</span>
-            <span class="tchip">13:00</span><span class="tchip">14:00</span>
-            <span class="tchip">15:00</span><span class="tchip">16:00</span>
-          </div>
-          <button class="btn btn-g btn-pill" onclick="this.textContent='✓ Записано!';this.style.background='var(--green-h)';setTimeout(()=>{this.textContent='Записаться';this.style.background=''},2500)">Записаться</button>
-        </div>
-      </div>
-      <div class="demo-cta">
-        <div class="demo-cta-row">
-          <div class="demo-cta-info">
-            <div class="demo-cta-label">Стоимость разработки</div>
-            <div class="demo-cta-price">от 20 000₽</div>
-          </div>
-          <a href="https://t.me/yusupov_pro" style="text-decoration:none;flex:1">
-            <button class="btn btn-g btn-sm btn-pill">Хочу такой →</button>
-          </a>
-        </div>
-      </div>
+  <!-- Demo types -->
+  <div class="pad" style="margin-top:16px"><div class="sec-lbl">Примеры типов мини-аппов</div></div>
+  <div class="demos-scroll">
+    <div class="demo-card" onclick="openSub('demo-catalog')"><div class="dc-ico">📋</div><div class="dc-name">Каталог</div><div class="dc-link">Демо →</div></div>
+    <div class="demo-card" onclick="openSub('demo-booking')"><div class="dc-ico">📅</div><div class="dc-name">Запись</div><div class="dc-link">Демо →</div></div>
+    <div class="demo-card" onclick="openSub('demo-loyalty')"><div class="dc-ico">🏆</div><div class="dc-name">Лояльность</div><div class="dc-link">Демо →</div></div>
+    <div class="demo-card" onclick="openSub('demo-affiliate')"><div class="dc-ico">🤝</div><div class="dc-name">Партнёрка</div><div class="dc-link">Демо →</div></div>
+    <div class="demo-card" onclick="openSub('demo-form')"><div class="dc-ico">📝</div><div class="dc-name">Заявка</div><div class="dc-link">Демо →</div></div>
+  </div>
+
+  <!-- Partners -->
+  <div class="pad" style="margin-top:20px">
+    <div class="sec-lbl">Официальные партнёры</div>
+    <div class="ptags">
+      <span class="ptag">amoCRM</span><span class="ptag">Radist.Online</span>
+      <span class="ptag">Wazzup</span><span class="ptag">Команда F5</span>
+      <span class="ptag">Sipuni/UIS</span><span class="ptag">Генезис</span>
     </div>
+  </div>
 
-    <!-- ═══════════════════════
-         DEMO: LOYALTY
-         ═══════════════════════ -->
-    <div class="demo-page" id="demo-loyalty">
-      <div class="demo-bar">
-        <span class="demo-back" onclick="closeDemo()">‹</span>
-        <span class="demo-bar-title">Программа лояльности</span>
-        <span class="demo-badge">демо</span>
-      </div>
-      <div class="demo-body">
-        <div class="demo-intro">
-          <div class="demo-intro-ico">🏆</div>
-          <div class="demo-intro-text">Пример <strong>«Программы лояльности»</strong>. Клиент копит баллы за покупки, видит уровень и обменивает бонусы на скидки.</div>
-        </div>
-        <div class="bonus-card">
-          <div class="bc-lvl">⭐⭐ Silver Partner</div>
-          <div class="bc-name">Иванов Иван</div>
-          <div class="bc-pts">2 450</div>
-          <div class="bc-lbl">баллов</div>
-          <div class="bc-prog"><div class="bc-fill"></div></div>
-          <div class="bc-sub">До Gold: ещё 550 баллов</div>
-          <div class="bc-warn">⚠️ 680 баллов сгорят 15 апреля</div>
-        </div>
-        <div class="pad" style="margin-bottom:10px">
-          <button class="btn btn-g btn-pill">Обменять баллы</button>
-        </div>
-        <div class="pad"><div class="sec-lbl">История операций</div></div>
-        <div class="hist-list">
-          <div class="hrow"><div class="hrow-info"><div class="hrow-name">📦 Проект «amoCRM Pro»</div><div class="hrow-dt">15 марта · Начисление</div></div><div class="hpts hp">+800</div></div>
-          <div class="hrow"><div class="hrow-info"><div class="hrow-name">🎁 Обмен баллов</div><div class="hrow-dt">10 марта · Списание</div></div><div class="hpts hm">−200</div></div>
-          <div class="hrow"><div class="hrow-info"><div class="hrow-name">🔌 WhatsApp интеграция</div><div class="hrow-dt">28 февраля · Начисление</div></div><div class="hpts hp">+400</div></div>
-          <div class="hrow"><div class="hrow-info"><div class="hrow-name">📊 Аналитика продаж</div><div class="hrow-dt">5 февраля · Начисление</div></div><div class="hpts hp">+680</div></div>
-        </div>
-      </div>
-      <div class="demo-cta">
-        <div class="demo-cta-row">
-          <div class="demo-cta-info">
-            <div class="demo-cta-label">Стоимость разработки</div>
-            <div class="demo-cta-price">от 30 000₽</div>
-          </div>
-          <a href="https://t.me/yusupov_pro" style="text-decoration:none;flex:1">
-            <button class="btn btn-g btn-sm btn-pill">Хочу такой →</button>
-          </a>
-        </div>
-      </div>
+  <!-- Social -->
+  <div class="pad" style="margin-top:16px">
+    <div class="sec-lbl">Контакты</div>
+    <div class="soc-row">
+      <a href="https://t.me/yusupov_pro" class="soc-btn" target="_blank">💬 Telegram (личный)</a>
+      <a href="https://t.me/yusupov_pro" class="soc-btn" target="_blank">📢 Telegram-канал</a>
     </div>
+  </div>
 
-    <!-- ═══════════════════════
-         DEMO: AFFILIATE
-         ═══════════════════════ -->
-    <div class="demo-page" id="demo-affiliate">
-      <div class="demo-bar">
-        <span class="demo-back" onclick="closeDemo()">‹</span>
-        <span class="demo-bar-title">Партнёрская программа</span>
-        <span class="demo-badge">демо</span>
-      </div>
-      <div class="demo-body">
-        <div class="demo-intro">
-          <div class="demo-intro-ico">🤝</div>
-          <div class="demo-intro-text">Пример <strong>«Партнёрской программы»</strong>. Партнёр получает реферальную ссылку, отслеживает привлечённых клиентов и выводит заработок.</div>
-        </div>
-        <div class="aff-body">
-          <div class="ref-box">
-            <div class="ref-lbl">Ваша реферальная ссылка</div>
-            <div class="ref-val">t.me/YusupovProd_bot?ref=USER123</div>
-            <button class="btn btn-amber btn-sm btn-pill" onclick="this.textContent='✅ Скопировано!'">📋 Скопировать ссылку</button>
-          </div>
-          <div class="aff-grid">
-            <div class="abox"><div class="abox-n">12</div><div class="abox-l">Приглашено</div></div>
-            <div class="abox"><div class="abox-n">5</div><div class="abox-l">Клиентов</div></div>
-            <div class="abox"><div class="abox-n">15К₽</div><div class="abox-l">Заработано</div></div>
-          </div>
-          <div class="sec-lbl">История выплат</div>
-          <div class="pay-list">
-            <div class="prow"><div><div style="font-weight:600">01 мар 2025</div><div style="font-size:.7rem;color:var(--light)">ООО Альфа</div></div><div class="pamt">+3 000₽</div><div class="pdot"></div></div>
-            <div class="prow"><div><div style="font-weight:600">15 фев 2025</div><div style="font-size:.7rem;color:var(--light)">ИП Петров</div></div><div class="pamt">+5 000₽</div><div class="pdot"></div></div>
-            <div class="prow"><div><div style="font-weight:600">02 янв 2025</div><div style="font-size:.7rem;color:var(--light)">Рога и Копыта</div></div><div class="pamt">+7 000₽</div><div class="pdot"></div></div>
-          </div>
-          <div style="margin-top:12px">
-            <button class="btn btn-amber btn-pill">Вывести средства</button>
-          </div>
-        </div>
-      </div>
-      <div class="demo-cta">
-        <div class="demo-cta-row">
-          <div class="demo-cta-info">
-            <div class="demo-cta-label">Стоимость разработки</div>
-            <div class="demo-cta-price">от 35 000₽</div>
-          </div>
-          <a href="https://t.me/yusupov_pro" style="text-decoration:none;flex:1">
-            <button class="btn btn-g btn-sm btn-pill">Хочу такой →</button>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════
-         DEMO: FORM
-         ═══════════════════════ -->
-    <div class="demo-page" id="demo-form">
-      <div class="demo-bar">
-        <span class="demo-back" onclick="closeDemo()">‹</span>
-        <span class="demo-bar-title">Форма заявки</span>
-        <span class="demo-badge">демо</span>
-      </div>
-      <div class="demo-body">
-        <div class="demo-intro">
-          <div class="demo-intro-ico">📝</div>
-          <div class="demo-intro-text">Пример <strong>«Формы заявки»</strong>. Клиент заполняет форму — данные мгновенно попадают в amoCRM, менеджер получает уведомление.</div>
-        </div>
-        <div class="form-body">
-          <div class="fg"><label class="fl">Имя</label><input class="inp" type="text" placeholder="Как вас зовут?" value="Иван"></div>
-          <div class="fg"><label class="fl">Телефон</label><input class="inp" type="tel" placeholder="+7 (___) ___-__-__" value="+7 (999) 123-45-67"></div>
-          <div class="fg">
-            <label class="fl">Что нужно?</label>
-            <div class="radio-list">
-              <div class="ropt sel"><div class="rdot"></div>Внедрение amoCRM</div>
-              <div class="ropt"><div class="rdot"></div>Разработка мини-аппа</div>
-              <div class="ropt"><div class="rdot"></div>Интеграция</div>
-              <div class="ropt"><div class="rdot"></div>Другое</div>
-            </div>
-          </div>
-          <div class="fg"><label class="fl">Комментарий</label><textarea class="ta" placeholder="Опишите задачу..."></textarea></div>
-          <button class="btn btn-g btn-pill" onclick="this.textContent='✓ Заявка отправлена!';this.style.background='var(--green-h)';setTimeout(()=>{this.textContent='Отправить заявку';this.style.background=''},2500)">Отправить заявку</button>
-        </div>
-      </div>
-      <div class="demo-cta">
-        <div class="demo-cta-row">
-          <div class="demo-cta-info">
-            <div class="demo-cta-label">Стоимость разработки</div>
-            <div class="demo-cta-price">от 10 000₽</div>
-          </div>
-          <a href="https://t.me/yusupov_pro" style="text-decoration:none;flex:1">
-            <button class="btn btn-g btn-sm btn-pill">Хочу такой →</button>
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /content -->
+  <!-- CTA -->
+  <div class="pad" style="margin-top:18px;padding-bottom:16px">
+    <a href="https://t.me/yusupov_pro" style="text-decoration:none">
+      <button class="btn btn-g btn-pill">💬 Обсудить проект</button>
+    </a>
+  </div>
 </div>
 
+<!-- ═══ PROJECT: СТРОИМ БАНИ (clean app, no badges) ═══ -->
+<div class="sub-page" id="proj-bani">
+  <div class="sub-bar"><span class="sub-back" onclick="closeSub()">‹</span><span class="sub-title">Строим Бани</span></div>
+  <div class="sub-body">
+    <div class="search-wrap" style="padding-top:10px"><input class="search-inp" type="text" placeholder="🔍  Поиск..."></div>
+    <div class="filter-scroll">
+      <button class="fpill on">Все</button><button class="fpill">Бани</button><button class="fpill">Дома</button><button class="fpill">Беседки</button><button class="fpill">Допы</button>
+    </div>
+    <div class="svc-list">
+      <div class="svc-card"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Классик"</div><div class="svc-desc">3×4м · Брус · Двускатная крыша</div></div><div style="text-align:right"><div class="svc-price">450 000₽</div><div class="svc-sub">под ключ</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Стандарт"</div><div class="svc-desc">4×5м · Каркас · Парная + мойка</div></div><div style="text-align:right"><div class="svc-price">650 000₽</div><div class="svc-sub">под ключ</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-b">🏗️</div><div style="flex:1"><div class="svc-n">Дом "Комфорт"</div><div class="svc-desc">8×8м · 2 этажа · 3 комнаты</div></div><div style="text-align:right"><div class="svc-price">1 200 000₽</div><div class="svc-sub">от 45 дней</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Премиум"</div><div class="svc-desc">5×6м · Кедр · Хаммам + парная</div></div><div style="text-align:right"><div class="svc-price">850 000₽</div><div class="svc-sub">под ключ</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-a">🪵</div><div style="flex:1"><div class="svc-n">Беседка "Уют"</div><div class="svc-desc">3×3м · Открытая · Мангальная зона</div></div><div style="text-align:right"><div class="svc-price">180 000₽</div><div class="svc-sub">10 дней</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-b">🏗️</div><div style="flex:1"><div class="svc-n">Дом "Семейный"</div><div class="svc-desc">10×10м · 2 этажа · 5 комнат</div></div><div style="text-align:right"><div class="svc-price">2 100 000₽</div><div class="svc-sub">от 60 дней</div></div></div>
+    </div>
+  </div>
+  <div class="proj-nav">
+    <div class="pni on"><span class="pni-ico">📋</span><span class="pni-lbl">Каталог</span></div>
+    <div class="pni"><span class="pni-ico">❤️</span><span class="pni-lbl">Избранное</span></div>
+    <div class="pni"><span class="pni-ico">📩</span><span class="pni-lbl">Заявки</span></div>
+    <div class="pni"><span class="pni-ico">👤</span><span class="pni-lbl">Профиль</span></div>
+  </div>
+</div>
+
+<!-- ═══ PROJECT: ТУРЫ ВКАЙФ (clean app) ═══ -->
+<div class="sub-page" id="proj-tours">
+  <div class="sub-bar"><span class="sub-back" onclick="closeSub()">‹</span><span class="sub-title">Туры Вкайф</span></div>
+  <div class="sub-body">
+    <div class="search-wrap" style="padding-top:10px"><input class="search-inp" type="text" placeholder="🔍  Поиск направлений..."></div>
+    <div class="filter-scroll">
+      <button class="fpill on">Все</button><button class="fpill">Казань</button><button class="fpill">СПб</button><button class="fpill">Москва</button><button class="fpill">Дагестан</button>
+    </div>
+    <div class="svc-list">
+      <div class="svc-card"><div class="svc-ico ico-b">🏛️</div><div style="flex:1"><div class="svc-n">Казань — жемчужина Поволжья</div><div class="svc-desc">3–4 дня · Автобусный тур</div></div><div style="text-align:right"><div class="svc-price">от 14 900₽</div><div class="svc-sub">/ чел</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-p">🌊</div><div style="flex:1"><div class="svc-n">Белые ночи Петербурга</div><div class="svc-desc">8–9 дней · Ж/д + автобус</div></div><div style="text-align:right"><div class="svc-price">от 32 500₽</div><div class="svc-sub">/ чел</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-a">🏔️</div><div style="flex:1"><div class="svc-n">Горный Дагестан</div><div class="svc-desc">5–7 дней · Авиа + джип-тур</div></div><div style="text-align:right"><div class="svc-price">от 28 000₽</div><div class="svc-sub">/ чел</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-g">🏛️</div><div style="flex:1"><div class="svc-n">Москва — столица</div><div class="svc-desc">7 дней · Ж/д + экскурсии</div></div><div style="text-align:right"><div class="svc-price">от 18 500₽</div><div class="svc-sub">/ чел</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-r">⛰️</div><div style="flex:1"><div class="svc-n">Алтай — сила природы</div><div class="svc-desc">10 дней · Авиа + кемпинг</div></div><div style="text-align:right"><div class="svc-price">от 35 000₽</div><div class="svc-sub">/ чел</div></div></div>
+    </div>
+  </div>
+  <div class="proj-nav">
+    <div class="pni on"><span class="pni-ico">📋</span><span class="pni-lbl">Каталог</span></div>
+    <div class="pni"><span class="pni-ico">🧳</span><span class="pni-lbl">Поездки</span></div>
+    <div class="pni"><span class="pni-ico">⭐</span><span class="pni-lbl">Бонусы</span></div>
+    <div class="pni"><span class="pni-ico">👤</span><span class="pni-lbl">Профиль</span></div>
+  </div>
+</div>
+
+<!-- ═══ DEMO: КАТАЛОГ ═══ -->
+<div class="sub-page" id="demo-catalog">
+  <div class="sub-bar"><span class="sub-back" onclick="closeSub()">‹</span><span class="sub-title">Каталог товаров</span><span class="sub-badge">демо</span></div>
+  <div class="sub-body">
+    <div class="intro-banner"><div class="intro-ico">📋</div><div class="intro-txt">Пример <strong>«Каталога»</strong>. Клиент ищет товар, смотрит цену и оставляет заявку — всё в Telegram.</div></div>
+    <div class="search-wrap"><input class="search-inp" type="text" placeholder="🔍  Поиск услуг..."></div>
+    <div class="filter-scroll"><button class="fpill on">Все</button><button class="fpill">Внедрение</button><button class="fpill">Интеграции</button><button class="fpill">Мини-аппы</button></div>
+    <div class="svc-list">
+      <div class="svc-card"><div class="svc-ico ico-g">⚙️</div><div style="flex:1"><div class="svc-n">amoCRM Base</div><div class="svc-desc">Базовое внедрение</div></div><div style="text-align:right"><div class="svc-price">30 000₽</div><div class="svc-sub">от 5 дней</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-g">🚀</div><div style="flex:1"><div class="svc-n">amoCRM Pro</div><div class="svc-desc">Полная автоматизация</div></div><div style="text-align:right"><div class="svc-price">75 000₽</div><div class="svc-sub">от 14 дней</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-b">🔌</div><div style="flex:1"><div class="svc-n">WhatsApp интеграция</div><div class="svc-desc">Wazzup / Radist</div></div><div style="text-align:right"><div class="svc-price">15 000₽</div><div class="svc-sub">от 2 дней</div></div></div>
+      <div class="svc-card"><div class="svc-ico ico-p">📱</div><div style="flex:1"><div class="svc-n">Мини-апп</div><div class="svc-desc">Telegram Mini App</div></div><div style="text-align:right"><div class="svc-price">25 000₽</div><div class="svc-sub">от 7 дней</div></div></div>
+    </div>
+  </div>
+  <div class="sub-cta"><div class="sub-cta-row"><div class="sub-cta-info"><div class="sub-cta-label">Разработка</div><div class="sub-cta-price">от 25 000₽</div></div><a href="https://t.me/yusupov_pro" style="text-decoration:none;flex:1"><button class="btn btn-g btn-sm btn-pill">Хочу такой →</button></a></div></div>
+</div>
+
+<!-- ═══ DEMO: ЗАПИСЬ ═══ -->
+<div class="sub-page" id="demo-booking">
+  <div class="sub-bar"><span class="sub-back" onclick="closeSub()">‹</span><span class="sub-title">Запись на услуги</span><span class="sub-badge">демо</span></div>
+  <div class="sub-body">
+    <div class="intro-banner"><div class="intro-ico">📅</div><div class="intro-txt">Пример <strong>«Записи»</strong>. Клиент выбирает услугу, дату и время — запись попадает в CRM.</div></div>
+    <div class="book-body">
+      <div class="sec-lbl">Услуга</div>
+      <div class="radio-list"><div class="ropt sel"><div class="rdot"></div>Внедрение amoCRM</div><div class="ropt"><div class="rdot"></div>Интеграция мессенджеров</div><div class="ropt"><div class="rdot"></div>Разработка мини-аппа</div></div>
+      <div class="sec-lbl">Дата</div>
+      <div class="date-scroll"><div class="dchip"><div class="dchip-d">Пн</div><div class="dchip-n">31</div></div><div class="dchip sel"><div class="dchip-d">Вт</div><div class="dchip-n">1</div></div><div class="dchip"><div class="dchip-d">Ср</div><div class="dchip-n">2</div></div><div class="dchip"><div class="dchip-d">Чт</div><div class="dchip-n">3</div></div><div class="dchip"><div class="dchip-d">Пт</div><div class="dchip-n">4</div></div></div>
+      <div class="sec-lbl">Время</div>
+      <div class="time-grid"><span class="tchip">10:00</span><span class="tchip sel">11:00</span><span class="tchip">13:00</span><span class="tchip">14:00</span><span class="tchip">15:00</span></div>
+      <button class="btn btn-g btn-pill" onclick="this.textContent='✓ Записано!';setTimeout(()=>this.textContent='Записаться',2500)">Записаться</button>
+    </div>
+  </div>
+  <div class="sub-cta"><div class="sub-cta-row"><div class="sub-cta-info"><div class="sub-cta-label">Разработка</div><div class="sub-cta-price">от 20 000₽</div></div><a href="https://t.me/yusupov_pro" style="text-decoration:none;flex:1"><button class="btn btn-g btn-sm btn-pill">Хочу такой →</button></a></div></div>
+</div>
+
+<!-- ═══ DEMO: ЛОЯЛЬНОСТЬ ═══ -->
+<div class="sub-page" id="demo-loyalty">
+  <div class="sub-bar"><span class="sub-back" onclick="closeSub()">‹</span><span class="sub-title">Программа лояльности</span><span class="sub-badge">демо</span></div>
+  <div class="sub-body">
+    <div class="intro-banner"><div class="intro-ico">🏆</div><div class="intro-txt">Пример <strong>«Лояльности»</strong>. Клиент копит баллы и обменивает на скидки.</div></div>
+    <div class="bonus-card"><div class="bc-lvl">⭐⭐ Silver</div><div class="bc-name">Иванов Иван</div><div class="bc-pts">2 450</div><div class="bc-lbl">баллов</div><div class="bc-prog"><div class="bc-fill"></div></div><div class="bc-sub">До Gold: ещё 550 баллов</div><div class="bc-warn">⚠️ 680 баллов сгорят 15 апреля</div></div>
+    <div class="pad" style="margin-bottom:8px"><button class="btn btn-g btn-pill">Обменять баллы</button></div>
+    <div class="pad"><div class="sec-lbl">История</div></div>
+    <div class="hist-list">
+      <div class="hrow"><div class="hrow-info"><div class="hrow-name">📦 Проект «amoCRM Pro»</div><div class="hrow-dt">15 мар · Начисление</div></div><div class="hpts hp">+800</div></div>
+      <div class="hrow"><div class="hrow-info"><div class="hrow-name">🎁 Обмен баллов</div><div class="hrow-dt">10 мар · Списание</div></div><div class="hpts hm">−200</div></div>
+      <div class="hrow"><div class="hrow-info"><div class="hrow-name">🔌 WhatsApp</div><div class="hrow-dt">28 фев · Начисление</div></div><div class="hpts hp">+400</div></div>
+    </div>
+  </div>
+  <div class="sub-cta"><div class="sub-cta-row"><div class="sub-cta-info"><div class="sub-cta-label">Разработка</div><div class="sub-cta-price">от 30 000₽</div></div><a href="https://t.me/yusupov_pro" style="text-decoration:none;flex:1"><button class="btn btn-g btn-sm btn-pill">Хочу такой →</button></a></div></div>
+</div>
+
+<!-- ═══ DEMO: ПАРТНЁРКА ═══ -->
+<div class="sub-page" id="demo-affiliate">
+  <div class="sub-bar"><span class="sub-back" onclick="closeSub()">‹</span><span class="sub-title">Партнёрская программа</span><span class="sub-badge">демо</span></div>
+  <div class="sub-body">
+    <div class="intro-banner"><div class="intro-ico">🤝</div><div class="intro-txt">Пример <strong>«Партнёрки»</strong>. Партнёр получает ссылку, привлекает клиентов и выводит заработок.</div></div>
+    <div class="aff-body">
+      <div class="ref-box"><div class="ref-lbl">Реферальная ссылка</div><div class="ref-val">t.me/YP_bot?ref=USER123</div><button class="btn btn-amber btn-sm btn-pill" onclick="this.textContent='✅ Скопировано!'">📋 Скопировать</button></div>
+      <div class="aff-grid"><div class="abox"><div class="abox-n">12</div><div class="abox-l">Приглашено</div></div><div class="abox"><div class="abox-n">5</div><div class="abox-l">Клиентов</div></div><div class="abox"><div class="abox-n">15К₽</div><div class="abox-l">Заработано</div></div></div>
+      <div class="sec-lbl">Выплаты</div>
+      <div class="pay-list">
+        <div class="prow"><div><div style="font-weight:600">01 мар</div><div style="font-size:.7rem;color:var(--l)">ООО Альфа</div></div><div class="pamt">+3 000₽</div><div class="pdot"></div></div>
+        <div class="prow"><div><div style="font-weight:600">15 фев</div><div style="font-size:.7rem;color:var(--l)">ИП Петров</div></div><div class="pamt">+5 000₽</div><div class="pdot"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="sub-cta"><div class="sub-cta-row"><div class="sub-cta-info"><div class="sub-cta-label">Разработка</div><div class="sub-cta-price">от 35 000₽</div></div><a href="https://t.me/yusupov_pro" style="text-decoration:none;flex:1"><button class="btn btn-g btn-sm btn-pill">Хочу такой →</button></a></div></div>
+</div>
+
+<!-- ═══ DEMO: ЗАЯВКА ═══ -->
+<div class="sub-page" id="demo-form">
+  <div class="sub-bar"><span class="sub-back" onclick="closeSub()">‹</span><span class="sub-title">Форма заявки</span><span class="sub-badge">демо</span></div>
+  <div class="sub-body">
+    <div class="intro-banner"><div class="intro-ico">📝</div><div class="intro-txt">Пример <strong>«Формы заявки»</strong>. Данные мгновенно попадают в CRM.</div></div>
+    <div class="form-body">
+      <div class="fg"><label class="fl">Имя</label><input class="inp" type="text" placeholder="Как вас зовут?"></div>
+      <div class="fg"><label class="fl">Телефон</label><input class="inp" type="tel" placeholder="+7 (___) ___-__-__"></div>
+      <div class="fg"><label class="fl">Что нужно?</label><div class="radio-list"><div class="ropt sel"><div class="rdot"></div>Внедрение amoCRM</div><div class="ropt"><div class="rdot"></div>Мини-апп</div><div class="ropt"><div class="rdot"></div>Интеграция</div><div class="ropt"><div class="rdot"></div>Другое</div></div></div>
+      <div class="fg"><label class="fl">Комментарий</label><textarea class="ta" placeholder="Опишите задачу..."></textarea></div>
+      <button class="btn btn-g btn-pill" onclick="this.textContent='✓ Отправлено!';setTimeout(()=>this.textContent='Отправить заявку',2500)">Отправить заявку</button>
+    </div>
+  </div>
+  <div class="sub-cta"><div class="sub-cta-row"><div class="sub-cta-info"><div class="sub-cta-label">Разработка</div><div class="sub-cta-price">от 10 000₽</div></div><a href="https://t.me/yusupov_pro" style="text-decoration:none;flex:1"><button class="btn btn-g btn-sm btn-pill">Хочу такой →</button></a></div></div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /app -->
+
 <script>
-const tg = window.Telegram?.WebApp;
-if (tg) { tg.ready(); tg.expand(); }
+const tg=window.Telegram?.WebApp;if(tg){tg.ready();tg.expand();}
 
-function openDemo(name) {
-  document.getElementById('main-page').classList.add('hide');
-  document.getElementById('demo-' + name).classList.add('show');
-  document.getElementById('content').scrollTo(0, 0);
-  // Telegram back button
-  if (tg) { tg.BackButton.show(); tg.BackButton.onClick(closeDemo); }
+function openSub(id){
+  document.getElementById('pg-main').classList.remove('on');
+  document.getElementById(id).classList.add('on');
+  document.getElementById('content').scrollTo(0,0);
+  if(tg){tg.BackButton.show();tg.BackButton.onClick(closeSub);}
 }
-
-function closeDemo() {
-  document.querySelectorAll('.demo-page').forEach(d => d.classList.remove('show'));
-  document.getElementById('main-page').classList.remove('hide');
-  document.getElementById('content').scrollTo(0, 0);
-  if (tg) { tg.BackButton.hide(); }
+function closeSub(){
+  document.querySelectorAll('.sub-page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pg-main').classList.add('on');
+  document.getElementById('content').scrollTo(0,0);
+  if(tg){tg.BackButton.hide();}
 }
-
-// Interactive elements
-document.querySelectorAll('.fpill').forEach(p => {
-  p.addEventListener('click', function() {
-    this.closest('.filter-scroll').querySelectorAll('.fpill').forEach(x => x.classList.remove('on'));
-    this.classList.add('on');
-  });
-});
-document.querySelectorAll('.ropt').forEach(r => {
-  r.addEventListener('click', function() {
-    this.closest('.radio-list').querySelectorAll('.ropt').forEach(x => x.classList.remove('sel'));
-    this.classList.add('sel');
-  });
-});
-document.querySelectorAll('.dchip').forEach(d => {
-  d.addEventListener('click', function() {
-    this.closest('.date-scroll').querySelectorAll('.dchip').forEach(x => x.classList.remove('sel'));
-    this.classList.add('sel');
-  });
-});
-document.querySelectorAll('.tchip').forEach(t => {
-  t.addEventListener('click', function() {
-    this.closest('.time-grid').querySelectorAll('.tchip').forEach(x => x.classList.remove('sel'));
-    this.classList.add('sel');
-  });
-});
+document.querySelectorAll('.fpill').forEach(p=>p.addEventListener('click',function(){this.closest('.filter-scroll').querySelectorAll('.fpill').forEach(x=>x.classList.remove('on'));this.classList.add('on');}));
+document.querySelectorAll('.ropt').forEach(r=>r.addEventListener('click',function(){this.closest('.radio-list').querySelectorAll('.ropt').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');}));
+document.querySelectorAll('.dchip').forEach(d=>d.addEventListener('click',function(){this.closest('.date-scroll').querySelectorAll('.dchip').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');}));
+document.querySelectorAll('.tchip').forEach(t=>t.addEventListener('click',function(){this.closest('.time-grid').querySelectorAll('.tchip').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');}));
 </script>
 </body>
 </html>
