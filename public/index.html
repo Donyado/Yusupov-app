@@ -92,14 +92,30 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 /* Animated phone preview */
 .prev-phone{width:100px;height:176px;background:#1c1c1e;border-radius:16px;padding:4px;flex-shrink:0;}
 .prev-screen{background:#fff;border-radius:13px;height:100%;overflow:hidden;position:relative;}
-.prev-strip{animation:prev-scroll 7s ease-in-out infinite;}
-@keyframes prev-scroll{0%,12%{transform:translateY(0)}32%,44%{transform:translateY(-50px)}64%,76%{transform:translateY(-100px)}92%,100%{transform:translateY(0)}}
+.prev-strip{animation:prev-pages 14s ease-in-out infinite;}
+.prev-strip.d2{animation-delay:-5s;}
+@keyframes prev-pages{0%,10%{transform:translateY(0)}16%,30%{transform:translateY(-168px)}36%,50%{transform:translateY(-336px)}56%,72%{transform:translateY(-504px)}82%,100%{transform:translateY(0)}}
+.prev-pg{height:168px;overflow:hidden;}
 .prev-bar{padding:8px 6px 6px;font-size:.42rem;font-weight:700;color:#fff;text-align:center;}
 .prev-pills{display:flex;gap:2px;padding:2px 4px;overflow:hidden;}
 .prev-pill{background:#eee;border-radius:6px;padding:1px 5px;font-size:.35rem;white-space:nowrap;}
 .prev-pill.act{background:var(--g);color:#fff;}
 .prev-item{margin:3px 4px;background:#f5f5f5;border-radius:6px;padding:5px;font-size:.38rem;color:#333;display:flex;gap:4px;align-items:center;}
 .prev-item-ico{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.5rem;flex-shrink:0;}
+.prev-nav{display:flex;justify-content:space-around;padding:3px 4px;border-top:1px solid #eee;position:absolute;bottom:0;left:0;right:0;background:#fff;font-size:.45rem;}
+.prev-nav span{opacity:.35;text-align:center;line-height:1.5;}
+.prev-nav span.on{opacity:1;}
+.prev-detail-hero{height:50px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.prev-detail-title{padding:4px 6px;font-size:.42rem;font-weight:800;color:#111;}
+.prev-detail-price{padding:0 6px;font-size:.5rem;font-weight:800;color:var(--g);}
+.prev-detail-specs{padding:2px 6px;}
+.prev-spec{display:flex;justify-content:space-between;font-size:.32rem;color:#666;padding:2px 0;border-bottom:1px solid #f5f5f5;}
+.prev-btn{margin:4px 6px;background:var(--g);color:#fff;border-radius:4px;padding:3px;font-size:.35rem;font-weight:700;text-align:center;}
+.prev-form-field{margin:3px 6px;background:#f5f5f5;border-radius:4px;padding:4px 5px;font-size:.32rem;color:#aaa;}
+.prev-avatar{width:20px;height:20px;border-radius:50%;margin:8px auto 3px;display:flex;align-items:center;justify-content:center;font-size:.35rem;font-weight:800;color:#fff;}
+.prev-profile-name{text-align:center;font-size:.4rem;font-weight:700;color:#111;margin-bottom:2px;}
+.prev-profile-phone{text-align:center;font-size:.3rem;color:#999;margin-bottom:5px;}
+.prev-menu-item{margin:2px 6px;padding:4px 5px;font-size:.33rem;color:#333;border-bottom:1px solid #f5f5f5;display:flex;justify-content:space-between;}
 
 .port-info{flex:1;display:flex;flex-direction:column;justify-content:center;}
 .port-badge{display:inline-block;background:var(--gl);color:var(--g);font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-bottom:6px;width:fit-content;}
@@ -308,13 +324,53 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
       <div class="prev-phone">
         <div class="prev-screen">
           <div class="prev-strip">
-            <div class="prev-bar" style="background:linear-gradient(135deg,#1a4a2e,#2d8a52)">Строим Бани</div>
-            <div class="prev-pills"><span class="prev-pill act">Все</span><span class="prev-pill">Бани</span><span class="prev-pill">Дома</span></div>
-            <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏠</span>Баня "Классик" · 450 000₽</div>
-            <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏠</span>Баня "Стандарт" · 650 000₽</div>
-            <div class="prev-item"><span class="prev-item-ico" style="background:#dbeafe">🏗️</span>Дом "Комфорт" · 1.2 млн₽</div>
-            <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏠</span>Баня "Премиум" · 850 000₽</div>
-            <div class="prev-item"><span class="prev-item-ico" style="background:#fef3c7">🪵</span>Беседка "Уют" · 180 000₽</div>
+            <!-- Page 1: Каталог -->
+            <div class="prev-pg">
+              <div class="prev-bar" style="background:linear-gradient(135deg,#1a4a2e,#2d8a52)">Строим Бани</div>
+              <div class="prev-pills"><span class="prev-pill act">Все</span><span class="prev-pill">Бани</span><span class="prev-pill">Дома</span></div>
+              <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏠</span>Баня "Классик" · 450 000₽</div>
+              <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏠</span>Баня "Стандарт" · 650 000₽</div>
+              <div class="prev-item"><span class="prev-item-ico" style="background:#dbeafe">🏗️</span>Дом "Комфорт" · 1.2 млн₽</div>
+              <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏠</span>Баня "Премиум" · 850 000₽</div>
+              <div class="prev-nav"><span class="on">📋</span><span>❤️</span><span>📩</span><span>👤</span></div>
+            </div>
+            <!-- Page 2: Детали товара -->
+            <div class="prev-pg">
+              <div class="prev-detail-hero" style="background:linear-gradient(135deg,#1a4a2e,#2d8a52)">🏠</div>
+              <div class="prev-detail-title">Баня "Стандарт"</div>
+              <div class="prev-detail-price">650 000₽</div>
+              <div class="prev-detail-specs">
+                <div class="prev-spec"><span>Площадь</span><span style="color:#111;font-weight:600">20 м²</span></div>
+                <div class="prev-spec"><span>Материал</span><span style="color:#111;font-weight:600">Каркас</span></div>
+                <div class="prev-spec"><span>Парная</span><span style="color:#111;font-weight:600">6 м²</span></div>
+                <div class="prev-spec"><span>Срок</span><span style="color:#111;font-weight:600">28 дней</span></div>
+              </div>
+              <div class="prev-btn">Оставить заявку</div>
+              <div class="prev-nav"><span class="on">📋</span><span>❤️</span><span>📩</span><span>👤</span></div>
+            </div>
+            <!-- Page 3: Форма заявки -->
+            <div class="prev-pg">
+              <div class="prev-bar" style="background:linear-gradient(135deg,#1a4a2e,#2d8a52)">Заявка</div>
+              <div style="padding:4px 6px;font-size:.32rem;color:#999">Менеджер свяжется за 30 мин</div>
+              <div class="prev-form-field">Имя</div>
+              <div class="prev-form-field">+7 (___) ___-__-__</div>
+              <div class="prev-form-field">Что интересует?</div>
+              <div class="prev-form-field" style="height:20px">Комментарий...</div>
+              <div class="prev-btn">Отправить</div>
+              <div class="prev-nav"><span>📋</span><span>❤️</span><span class="on">📩</span><span>👤</span></div>
+            </div>
+            <!-- Page 4: Профиль -->
+            <div class="prev-pg">
+              <div class="prev-avatar" style="background:linear-gradient(135deg,#0d3d1e,#1a7a3a)">ИИ</div>
+              <div class="prev-profile-name">Иванов Иван</div>
+              <div class="prev-profile-phone">+7 (999) 123-45-67</div>
+              <div class="prev-menu-item"><span>📋 Мои заявки</span><span style="color:#ccc">›</span></div>
+              <div class="prev-menu-item"><span>❤️ Избранное</span><span style="color:#ccc">›</span></div>
+              <div class="prev-menu-item"><span>🔔 Уведомления</span><span style="color:#ccc">›</span></div>
+              <div class="prev-menu-item"><span>📞 Менеджер</span><span style="color:#ccc">›</span></div>
+              <div class="prev-menu-item"><span>⚙️ Настройки</span><span style="color:#ccc">›</span></div>
+              <div class="prev-nav"><span>📋</span><span>❤️</span><span>📩</span><span class="on">👤</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -330,14 +386,57 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     <div class="port-card" onclick="openSub('proj-tours')">
       <div class="prev-phone">
         <div class="prev-screen">
-          <div class="prev-strip" style="animation-delay:-3s">
-            <div class="prev-bar" style="background:linear-gradient(135deg,#1e3a5f,#3b82f6)">Туры Вкайф</div>
-            <div class="prev-pills"><span class="prev-pill act">Все</span><span class="prev-pill">Казань</span><span class="prev-pill">СПб</span></div>
-            <div class="prev-item"><span class="prev-item-ico" style="background:#dbeafe">🏛️</span>Казань · от 14 900₽</div>
-            <div class="prev-item"><span class="prev-item-ico" style="background:#ede9fe">🌊</span>Санкт-Петербург · от 32 500₽</div>
-            <div class="prev-item"><span class="prev-item-ico" style="background:#fef3c7">🏔️</span>Дагестан · от 28 000₽</div>
-            <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏛️</span>Москва · от 18 500₽</div>
-            <div class="prev-item"><span class="prev-item-ico" style="background:#fee2e2">⛰️</span>Алтай · от 35 000₽</div>
+          <div class="prev-strip d2">
+            <!-- Page 1: Каталог туров -->
+            <div class="prev-pg">
+              <div class="prev-bar" style="background:linear-gradient(135deg,#1e3a5f,#3b82f6)">Туры Вкайф</div>
+              <div class="prev-pills"><span class="prev-pill" style="background:#3b82f6;color:#fff">Все</span><span class="prev-pill">Казань</span><span class="prev-pill">СПб</span></div>
+              <div class="prev-item"><span class="prev-item-ico" style="background:#dbeafe">🏛️</span>Казань · от 14 900₽</div>
+              <div class="prev-item"><span class="prev-item-ico" style="background:#ede9fe">🌊</span>С-Петербург · 32 500₽</div>
+              <div class="prev-item"><span class="prev-item-ico" style="background:#fef3c7">🏔️</span>Дагестан · от 28 000₽</div>
+              <div class="prev-item"><span class="prev-item-ico" style="background:#dcfce7">🏛️</span>Москва · от 18 500₽</div>
+              <div class="prev-nav"><span class="on">📋</span><span>🧳</span><span>⭐</span><span>👤</span></div>
+            </div>
+            <!-- Page 2: Детали тура -->
+            <div class="prev-pg">
+              <div class="prev-detail-hero" style="background:linear-gradient(135deg,#1e3a5f,#3b82f6)">🏛️</div>
+              <div style="padding:2px 6px"><span style="background:#dbeafe;color:#2563eb;font-size:.3rem;font-weight:700;padding:1px 5px;border-radius:4px">Казань</span></div>
+              <div class="prev-detail-title">Казань — жемчужина Поволжья</div>
+              <div class="prev-detail-price" style="color:#2563eb">от 14 900₽ <span style="font-size:.35rem;color:#999">/ чел</span></div>
+              <div class="prev-detail-specs">
+                <div class="prev-spec"><span>Дней</span><span style="color:#111;font-weight:600">3–4</span></div>
+                <div class="prev-spec"><span>Транспорт</span><span style="color:#111;font-weight:600">Автобус</span></div>
+                <div class="prev-spec"><span>Отель</span><span style="color:#111;font-weight:600">3★</span></div>
+              </div>
+              <div class="prev-btn" style="background:#2563eb">Забронировать</div>
+              <div class="prev-nav"><span class="on">📋</span><span>🧳</span><span>⭐</span><span>👤</span></div>
+            </div>
+            <!-- Page 3: Бонусы -->
+            <div class="prev-pg">
+              <div style="margin:6px;background:linear-gradient(135deg,#4c1d95,#7c3aed);border-radius:8px;padding:8px;color:#fff">
+                <div style="font-size:.3rem;opacity:.8">Ваш баланс</div>
+                <div style="font-size:.65rem;font-weight:800">1 260 ₽</div>
+                <div style="background:rgba(255,255,255,.2);height:3px;border-radius:2px;margin-top:4px"><div style="background:rgba(255,255,255,.8);height:100%;width:45%;border-radius:2px"></div></div>
+                <div style="font-size:.28rem;opacity:.6;margin-top:2px">До VIP: ещё 1 740₽</div>
+              </div>
+              <div style="padding:0 6px;font-size:.32rem;color:#999;font-weight:600;margin:4px 0 2px">ИСТОРИЯ</div>
+              <div class="prev-item" style="font-size:.32rem">🏛️ Тур Казань <span style="color:#16a34a;font-weight:700;margin-left:auto">+800₽</span></div>
+              <div class="prev-item" style="font-size:.32rem">🎁 Списание <span style="color:#dc2626;font-weight:700;margin-left:auto">−2 000₽</span></div>
+              <div class="prev-item" style="font-size:.32rem">🌊 Тур СПб <span style="color:#16a34a;font-weight:700;margin-left:auto">+1 600₽</span></div>
+              <div class="prev-nav"><span>📋</span><span>🧳</span><span class="on">⭐</span><span>👤</span></div>
+            </div>
+            <!-- Page 4: Профиль -->
+            <div class="prev-pg">
+              <div class="prev-avatar" style="background:linear-gradient(135deg,#1e3a5f,#3b82f6)">ИИ</div>
+              <div class="prev-profile-name">Иванов Иван</div>
+              <div class="prev-profile-phone">+7 (999) 123-45-67</div>
+              <div class="prev-menu-item"><span>🧳 Мои поездки</span><span style="color:#ccc">›</span></div>
+              <div class="prev-menu-item"><span>⭐ Бонусы</span><span style="color:#ccc">›</span></div>
+              <div class="prev-menu-item"><span>🔔 Уведомления</span><span style="color:#ccc">›</span></div>
+              <div class="prev-menu-item"><span>📞 Поддержка</span><span style="color:#ccc">›</span></div>
+              <div class="prev-menu-item"><span>⚙️ Настройки</span><span style="color:#ccc">›</span></div>
+              <div class="prev-nav"><span>📋</span><span>🧳</span><span>⭐</span><span class="on">👤</span></div>
+            </div>
           </div>
         </div>
       </div>
