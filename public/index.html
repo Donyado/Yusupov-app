@@ -201,10 +201,44 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 
 /* Project bottom nav */
 .proj-nav{display:flex;border-top:1px solid var(--b);background:var(--bg);flex-shrink:0;padding-bottom:max(2px,env(safe-area-inset-bottom));}
-.pni{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 0 4px;cursor:pointer;}
+.pni{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 0 4px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;}
 .pni-ico{font-size:1.15rem;line-height:1.2;}
 .pni-lbl{font-size:.58rem;color:var(--l);margin-top:1px;}
 .pni.on .pni-lbl{color:var(--g);font-weight:700;}
+/* Project tabs */
+.ptab{display:none;}.ptab.on{display:block;}
+/* Detail view */
+.detail-view{display:none;flex-direction:column;position:absolute;inset:0;background:var(--bg);z-index:10;}
+.detail-view.on{display:flex;}
+.detail-hero{height:180px;display:flex;align-items:center;justify-content:center;font-size:4rem;flex-shrink:0;}
+.detail-body{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch;}
+.detail-body::-webkit-scrollbar{width:0;}
+.detail-badge{display:inline-block;background:var(--gl);color:var(--g);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:8px;}
+.detail-title{font-size:1.1rem;font-weight:800;margin-bottom:6px;line-height:1.3;}
+.detail-meta{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.detail-m{font-size:.74rem;color:var(--m);display:flex;align-items:center;gap:4px;}
+.detail-desc{font-size:.82rem;color:#444;line-height:1.7;margin-bottom:16px;}
+.detail-price-row{display:flex;align-items:baseline;gap:6px;margin-bottom:14px;}
+.detail-price{font-size:1.4rem;font-weight:800;color:var(--g);}
+.detail-price-sub{font-size:.78rem;color:var(--l);}
+.detail-specs{margin-bottom:16px;}
+.spec-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bg2);font-size:.82rem;}
+.spec-row:last-child{border:none;}
+.spec-label{color:var(--m);}
+.spec-val{font-weight:600;}
+/* Fav/profile screens */
+.empty-state{padding:60px 20px;text-align:center;}
+.empty-ico{font-size:3rem;margin-bottom:12px;opacity:.4;}
+.empty-title{font-size:.95rem;font-weight:700;margin-bottom:4px;}
+.empty-desc{font-size:.8rem;color:var(--m);line-height:1.5;}
+.profile-head{padding:24px 16px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--bg2);}
+.profile-av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#0d3d1e,#1a7a3a);display:flex;align-items:center;justify-content:center;color:#7ecfa8;font-size:.95rem;font-weight:800;flex-shrink:0;}
+.profile-name{font-size:.95rem;font-weight:700;}
+.profile-phone{font-size:.78rem;color:var(--m);}
+.profile-menu{padding:12px 16px;}
+.pmenu-item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--bg2);font-size:.86rem;cursor:pointer;}
+.pmenu-item:last-child{border:none;}
+.pmenu-arrow{margin-left:auto;color:var(--l);font-size:.8rem;}
 </style>
 </head>
 <body>
@@ -353,52 +387,126 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   </div>
 </div>
 
-<!-- ═══ PROJECT: СТРОИМ БАНИ (clean app, no badges) ═══ -->
+<!-- ═══ PROJECT: СТРОИМ БАНИ (fully interactive) ═══ -->
 <div class="sub-page" id="proj-bani">
   <div class="sub-bar"><span class="sub-back" onclick="closeSub()">‹</span><span class="sub-title">Строим Бани</span></div>
-  <div class="sub-body">
-    <div class="search-wrap" style="padding-top:10px"><input class="search-inp" type="text" placeholder="🔍  Поиск..."></div>
-    <div class="filter-scroll">
-      <button class="fpill on">Все</button><button class="fpill">Бани</button><button class="fpill">Дома</button><button class="fpill">Беседки</button><button class="fpill">Допы</button>
+  <div class="sub-body" style="position:relative">
+    <!-- TAB: Каталог -->
+    <div class="ptab on" id="bani-catalog">
+      <div class="search-wrap" style="padding-top:10px"><input class="search-inp" type="text" placeholder="🔍  Поиск..."></div>
+      <div class="filter-scroll">
+        <button class="fpill on">Все</button><button class="fpill">Бани</button><button class="fpill">Дома</button><button class="fpill">Беседки</button>
+      </div>
+      <div class="svc-list">
+        <div class="svc-card" onclick="showDetail('bani','klassik')"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Классик"</div><div class="svc-desc">3×4м · Брус · Двускатная крыша</div></div><div style="text-align:right"><div class="svc-price">450 000₽</div><div class="svc-sub">под ключ</div></div></div>
+        <div class="svc-card" onclick="showDetail('bani','standart')"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Стандарт"</div><div class="svc-desc">4×5м · Каркас · Парная + мойка</div></div><div style="text-align:right"><div class="svc-price">650 000₽</div><div class="svc-sub">под ключ</div></div></div>
+        <div class="svc-card" onclick="showDetail('bani','comfort')"><div class="svc-ico ico-b">🏗️</div><div style="flex:1"><div class="svc-n">Дом "Комфорт"</div><div class="svc-desc">8×8м · 2 этажа · 3 комнаты</div></div><div style="text-align:right"><div class="svc-price">1 200 000₽</div><div class="svc-sub">от 45 дней</div></div></div>
+        <div class="svc-card" onclick="showDetail('bani','premium')"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Премиум"</div><div class="svc-desc">5×6м · Кедр · Хаммам + парная</div></div><div style="text-align:right"><div class="svc-price">850 000₽</div><div class="svc-sub">под ключ</div></div></div>
+        <div class="svc-card" onclick="showDetail('bani','besedka')"><div class="svc-ico ico-a">🪵</div><div style="flex:1"><div class="svc-n">Беседка "Уют"</div><div class="svc-desc">3×3м · Открытая · Мангальная зона</div></div><div style="text-align:right"><div class="svc-price">180 000₽</div><div class="svc-sub">10 дней</div></div></div>
+        <div class="svc-card" onclick="showDetail('bani','dom')"><div class="svc-ico ico-b">🏗️</div><div style="flex:1"><div class="svc-n">Дом "Семейный"</div><div class="svc-desc">10×10м · 2 этажа · 5 комнат</div></div><div style="text-align:right"><div class="svc-price">2 100 000₽</div><div class="svc-sub">от 60 дней</div></div></div>
+      </div>
     </div>
-    <div class="svc-list">
-      <div class="svc-card"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Классик"</div><div class="svc-desc">3×4м · Брус · Двускатная крыша</div></div><div style="text-align:right"><div class="svc-price">450 000₽</div><div class="svc-sub">под ключ</div></div></div>
-      <div class="svc-card"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Стандарт"</div><div class="svc-desc">4×5м · Каркас · Парная + мойка</div></div><div style="text-align:right"><div class="svc-price">650 000₽</div><div class="svc-sub">под ключ</div></div></div>
-      <div class="svc-card"><div class="svc-ico ico-b">🏗️</div><div style="flex:1"><div class="svc-n">Дом "Комфорт"</div><div class="svc-desc">8×8м · 2 этажа · 3 комнаты</div></div><div style="text-align:right"><div class="svc-price">1 200 000₽</div><div class="svc-sub">от 45 дней</div></div></div>
-      <div class="svc-card"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Премиум"</div><div class="svc-desc">5×6м · Кедр · Хаммам + парная</div></div><div style="text-align:right"><div class="svc-price">850 000₽</div><div class="svc-sub">под ключ</div></div></div>
-      <div class="svc-card"><div class="svc-ico ico-a">🪵</div><div style="flex:1"><div class="svc-n">Беседка "Уют"</div><div class="svc-desc">3×3м · Открытая · Мангальная зона</div></div><div style="text-align:right"><div class="svc-price">180 000₽</div><div class="svc-sub">10 дней</div></div></div>
-      <div class="svc-card"><div class="svc-ico ico-b">🏗️</div><div style="flex:1"><div class="svc-n">Дом "Семейный"</div><div class="svc-desc">10×10м · 2 этажа · 5 комнат</div></div><div style="text-align:right"><div class="svc-price">2 100 000₽</div><div class="svc-sub">от 60 дней</div></div></div>
+    <!-- TAB: Избранное -->
+    <div class="ptab" id="bani-fav">
+      <div class="svc-list" style="padding-top:12px">
+        <div class="svc-card" onclick="showDetail('bani','standart')"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Стандарт"</div><div class="svc-desc">4×5м · Каркас</div></div><div style="text-align:right"><div class="svc-price">650 000₽</div><div style="font-size:.7rem;color:#dc2626;cursor:pointer" onclick="event.stopPropagation();this.closest('.svc-card').style.display='none'">Убрать ❌</div></div></div>
+        <div class="svc-card" onclick="showDetail('bani','premium')"><div class="svc-ico ico-g">🏠</div><div style="flex:1"><div class="svc-n">Баня "Премиум"</div><div class="svc-desc">5×6м · Кедр</div></div><div style="text-align:right"><div class="svc-price">850 000₽</div><div style="font-size:.7rem;color:#dc2626;cursor:pointer" onclick="event.stopPropagation();this.closest('.svc-card').style.display='none'">Убрать ❌</div></div></div>
+      </div>
     </div>
+    <!-- TAB: Заявки -->
+    <div class="ptab" id="bani-req">
+      <div class="form-body" style="padding-top:14px">
+        <div style="font-size:.82rem;color:var(--m);margin-bottom:14px;line-height:1.5">Оставьте заявку — менеджер свяжется в течение 30 минут</div>
+        <div class="fg"><label class="fl">Имя</label><input class="inp" type="text" placeholder="Как вас зовут?"></div>
+        <div class="fg"><label class="fl">Телефон</label><input class="inp" type="tel" placeholder="+7 (___) ___-__-__"></div>
+        <div class="fg"><label class="fl">Что интересует?</label><div class="radio-list"><div class="ropt sel"><div class="rdot"></div>Баня</div><div class="ropt"><div class="rdot"></div>Дом</div><div class="ropt"><div class="rdot"></div>Беседка</div><div class="ropt"><div class="rdot"></div>Комплекс</div></div></div>
+        <div class="fg"><label class="fl">Комментарий</label><textarea class="ta" placeholder="Размер, материал, пожелания..."></textarea></div>
+        <button class="btn btn-g btn-pill" onclick="this.textContent='✓ Заявка отправлена!';setTimeout(()=>this.textContent='Отправить заявку',2500)">Отправить заявку</button>
+      </div>
+    </div>
+    <!-- TAB: Профиль -->
+    <div class="ptab" id="bani-profile">
+      <div class="profile-head">
+        <div class="profile-av">ИИ</div>
+        <div><div class="profile-name">Иванов Иван</div><div class="profile-phone">+7 (999) 123-45-67</div></div>
+      </div>
+      <div class="profile-menu">
+        <div class="pmenu-item">📋 Мои заявки<span class="pmenu-arrow">›</span></div>
+        <div class="pmenu-item">❤️ Избранное<span class="pmenu-arrow">›</span></div>
+        <div class="pmenu-item">🔔 Уведомления<span class="pmenu-arrow">›</span></div>
+        <div class="pmenu-item">📞 Позвонить менеджеру<span class="pmenu-arrow">›</span></div>
+        <div class="pmenu-item">⚙️ Настройки<span class="pmenu-arrow">›</span></div>
+      </div>
+    </div>
+    <!-- DETAIL VIEW (overlay) -->
+    <div class="detail-view" id="bani-detail"></div>
   </div>
-  <div class="proj-nav">
-    <div class="pni on"><span class="pni-ico">📋</span><span class="pni-lbl">Каталог</span></div>
-    <div class="pni"><span class="pni-ico">❤️</span><span class="pni-lbl">Избранное</span></div>
-    <div class="pni"><span class="pni-ico">📩</span><span class="pni-lbl">Заявки</span></div>
-    <div class="pni"><span class="pni-ico">👤</span><span class="pni-lbl">Профиль</span></div>
+  <div class="proj-nav" id="bani-nav">
+    <div class="pni on" onclick="projTab('bani','catalog')"><span class="pni-ico">📋</span><span class="pni-lbl">Каталог</span></div>
+    <div class="pni" onclick="projTab('bani','fav')"><span class="pni-ico">❤️</span><span class="pni-lbl">Избранное</span></div>
+    <div class="pni" onclick="projTab('bani','req')"><span class="pni-ico">📩</span><span class="pni-lbl">Заявки</span></div>
+    <div class="pni" onclick="projTab('bani','profile')"><span class="pni-ico">👤</span><span class="pni-lbl">Профиль</span></div>
   </div>
 </div>
 
-<!-- ═══ PROJECT: ТУРЫ ВКАЙФ (clean app) ═══ -->
+<!-- ═══ PROJECT: ТУРЫ ВКАЙФ (fully interactive) ═══ -->
 <div class="sub-page" id="proj-tours">
   <div class="sub-bar"><span class="sub-back" onclick="closeSub()">‹</span><span class="sub-title">Туры Вкайф</span></div>
-  <div class="sub-body">
-    <div class="search-wrap" style="padding-top:10px"><input class="search-inp" type="text" placeholder="🔍  Поиск направлений..."></div>
-    <div class="filter-scroll">
-      <button class="fpill on">Все</button><button class="fpill">Казань</button><button class="fpill">СПб</button><button class="fpill">Москва</button><button class="fpill">Дагестан</button>
+  <div class="sub-body" style="position:relative">
+    <!-- TAB: Каталог -->
+    <div class="ptab on" id="tours-catalog">
+      <div class="search-wrap" style="padding-top:10px"><input class="search-inp" type="text" placeholder="🔍  Поиск направлений..."></div>
+      <div class="filter-scroll">
+        <button class="fpill on">Все</button><button class="fpill">Казань</button><button class="fpill">СПб</button><button class="fpill">Москва</button><button class="fpill">Дагестан</button>
+      </div>
+      <div class="svc-list">
+        <div class="svc-card" onclick="showDetail('tours','kazan')"><div class="svc-ico ico-b">🏛️</div><div style="flex:1"><div class="svc-n">Казань — жемчужина Поволжья</div><div class="svc-desc">3–4 дня · Автобусный тур</div></div><div style="text-align:right"><div class="svc-price">от 14 900₽</div><div class="svc-sub">/ чел</div></div></div>
+        <div class="svc-card" onclick="showDetail('tours','spb')"><div class="svc-ico ico-p">🌊</div><div style="flex:1"><div class="svc-n">Белые ночи Петербурга</div><div class="svc-desc">8–9 дней · Ж/д + автобус</div></div><div style="text-align:right"><div class="svc-price">от 32 500₽</div><div class="svc-sub">/ чел</div></div></div>
+        <div class="svc-card" onclick="showDetail('tours','dagestan')"><div class="svc-ico ico-a">🏔️</div><div style="flex:1"><div class="svc-n">Горный Дагестан</div><div class="svc-desc">5–7 дней · Авиа + джип-тур</div></div><div style="text-align:right"><div class="svc-price">от 28 000₽</div><div class="svc-sub">/ чел</div></div></div>
+        <div class="svc-card" onclick="showDetail('tours','moscow')"><div class="svc-ico ico-g">🏛️</div><div style="flex:1"><div class="svc-n">Москва — столица</div><div class="svc-desc">7 дней · Ж/д + экскурсии</div></div><div style="text-align:right"><div class="svc-price">от 18 500₽</div><div class="svc-sub">/ чел</div></div></div>
+        <div class="svc-card" onclick="showDetail('tours','altai')"><div class="svc-ico ico-r">⛰️</div><div style="flex:1"><div class="svc-n">Алтай — сила природы</div><div class="svc-desc">10 дней · Авиа + кемпинг</div></div><div style="text-align:right"><div class="svc-price">от 35 000₽</div><div class="svc-sub">/ чел</div></div></div>
+      </div>
     </div>
-    <div class="svc-list">
-      <div class="svc-card"><div class="svc-ico ico-b">🏛️</div><div style="flex:1"><div class="svc-n">Казань — жемчужина Поволжья</div><div class="svc-desc">3–4 дня · Автобусный тур</div></div><div style="text-align:right"><div class="svc-price">от 14 900₽</div><div class="svc-sub">/ чел</div></div></div>
-      <div class="svc-card"><div class="svc-ico ico-p">🌊</div><div style="flex:1"><div class="svc-n">Белые ночи Петербурга</div><div class="svc-desc">8–9 дней · Ж/д + автобус</div></div><div style="text-align:right"><div class="svc-price">от 32 500₽</div><div class="svc-sub">/ чел</div></div></div>
-      <div class="svc-card"><div class="svc-ico ico-a">🏔️</div><div style="flex:1"><div class="svc-n">Горный Дагестан</div><div class="svc-desc">5–7 дней · Авиа + джип-тур</div></div><div style="text-align:right"><div class="svc-price">от 28 000₽</div><div class="svc-sub">/ чел</div></div></div>
-      <div class="svc-card"><div class="svc-ico ico-g">🏛️</div><div style="flex:1"><div class="svc-n">Москва — столица</div><div class="svc-desc">7 дней · Ж/д + экскурсии</div></div><div style="text-align:right"><div class="svc-price">от 18 500₽</div><div class="svc-sub">/ чел</div></div></div>
-      <div class="svc-card"><div class="svc-ico ico-r">⛰️</div><div style="flex:1"><div class="svc-n">Алтай — сила природы</div><div class="svc-desc">10 дней · Авиа + кемпинг</div></div><div style="text-align:right"><div class="svc-price">от 35 000₽</div><div class="svc-sub">/ чел</div></div></div>
+    <!-- TAB: Поездки -->
+    <div class="ptab" id="tours-trips">
+      <div class="svc-list" style="padding-top:12px">
+        <div style="margin:0 0 10px;padding:10px 14px;background:var(--gl);border-radius:12px;font-size:.78rem;color:var(--g);font-weight:500">🧳 Ваши забронированные поездки</div>
+        <div class="svc-card" onclick="showDetail('tours','kazan')"><div class="svc-ico ico-b">🏛️</div><div style="flex:1"><div class="svc-n">Казань</div><div class="svc-desc">12–15 апреля · 2 чел</div><div style="font-size:.68rem;color:var(--g);font-weight:600;margin-top:3px">Забронирован ✓</div></div><div style="text-align:right"><div class="svc-price">29 800₽</div></div></div>
+      </div>
     </div>
+    <!-- TAB: Бонусы -->
+    <div class="ptab" id="tours-bonus">
+      <div class="bonus-card"><div class="bc-lvl">⭐ Путешественник</div><div class="bc-name">Иванов Иван</div><div class="bc-pts">1 260</div><div class="bc-lbl">бонусных ₽</div><div class="bc-prog"><div class="bc-fill" style="width:45%"></div></div><div class="bc-sub">До VIP: ещё 1 740₽</div></div>
+      <div class="pad" style="margin-bottom:8px"><button class="btn btn-g btn-pill">Использовать бонусы</button></div>
+      <div class="pad"><div class="sec-lbl">История</div></div>
+      <div class="hist-list">
+        <div class="hrow"><div class="hrow-info"><div class="hrow-name">🏛️ Тур «Казань» 3 дня</div><div class="hrow-dt">15 мар · Начисление</div></div><div class="hpts hp">+800₽</div></div>
+        <div class="hrow"><div class="hrow-info"><div class="hrow-name">🎁 Списание на Дагестан</div><div class="hrow-dt">10 мар · Списание</div></div><div class="hpts hm">−2 000₽</div></div>
+        <div class="hrow"><div class="hrow-info"><div class="hrow-name">🌊 Тур «СПб» 7 дней</div><div class="hrow-dt">28 дек · Начисление</div></div><div class="hpts hp">+1 600₽</div></div>
+      </div>
+    </div>
+    <!-- TAB: Профиль -->
+    <div class="ptab" id="tours-profile">
+      <div class="profile-head">
+        <div class="profile-av">ИИ</div>
+        <div><div class="profile-name">Иванов Иван</div><div class="profile-phone">+7 (999) 123-45-67</div></div>
+      </div>
+      <div class="profile-menu">
+        <div class="pmenu-item">🧳 Мои поездки<span class="pmenu-arrow">›</span></div>
+        <div class="pmenu-item">⭐ Бонусная программа<span class="pmenu-arrow">›</span></div>
+        <div class="pmenu-item">🔔 Уведомления<span class="pmenu-arrow">›</span></div>
+        <div class="pmenu-item">📞 Поддержка<span class="pmenu-arrow">›</span></div>
+        <div class="pmenu-item">⚙️ Настройки<span class="pmenu-arrow">›</span></div>
+      </div>
+    </div>
+    <!-- DETAIL VIEW -->
+    <div class="detail-view" id="tours-detail"></div>
   </div>
-  <div class="proj-nav">
-    <div class="pni on"><span class="pni-ico">📋</span><span class="pni-lbl">Каталог</span></div>
-    <div class="pni"><span class="pni-ico">🧳</span><span class="pni-lbl">Поездки</span></div>
-    <div class="pni"><span class="pni-ico">⭐</span><span class="pni-lbl">Бонусы</span></div>
-    <div class="pni"><span class="pni-ico">👤</span><span class="pni-lbl">Профиль</span></div>
+  <div class="proj-nav" id="tours-nav">
+    <div class="pni on" onclick="projTab('tours','catalog')"><span class="pni-ico">📋</span><span class="pni-lbl">Каталог</span></div>
+    <div class="pni" onclick="projTab('tours','trips')"><span class="pni-ico">🧳</span><span class="pni-lbl">Поездки</span></div>
+    <div class="pni" onclick="projTab('tours','bonus')"><span class="pni-ico">⭐</span><span class="pni-lbl">Бонусы</span></div>
+    <div class="pni" onclick="projTab('tours','profile')"><span class="pni-ico">👤</span><span class="pni-lbl">Профиль</span></div>
   </div>
 </div>
 
@@ -493,19 +601,117 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 
 <script>
 const tg=window.Telegram?.WebApp;if(tg){tg.ready();tg.expand();}
+let detailOpen=false;
 
 function openSub(id){
   document.getElementById('pg-main').classList.remove('on');
   document.getElementById(id).classList.add('on');
   document.getElementById('content').scrollTo(0,0);
-  if(tg){tg.BackButton.show();tg.BackButton.onClick(closeSub);}
+  if(tg){tg.BackButton.show();tg.BackButton.onClick(handleBack);}
 }
 function closeSub(){
+  document.querySelectorAll('.detail-view').forEach(d=>{d.classList.remove('on');d.innerHTML='';});
+  detailOpen=false;
   document.querySelectorAll('.sub-page').forEach(p=>p.classList.remove('on'));
   document.getElementById('pg-main').classList.add('on');
   document.getElementById('content').scrollTo(0,0);
   if(tg){tg.BackButton.hide();}
 }
+function handleBack(){
+  if(detailOpen){hideDetail();return;}
+  closeSub();
+}
+
+// Project tab switching
+function projTab(proj,tab){
+  const page=document.getElementById('proj-'+proj);
+  page.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  document.getElementById(proj+'-'+tab).classList.add('on');
+  document.getElementById(proj+'-nav').querySelectorAll('.pni').forEach((n,i)=>{
+    n.classList.remove('on');
+  });
+  event.currentTarget.classList.add('on');
+  page.querySelector('.sub-body').scrollTo(0,0);
+}
+
+// Detail data
+const DETAILS={
+  bani:{
+    klassik:{ico:'🏠',bg:'linear-gradient(135deg,#1a4a2e,#2d8a52)',badge:'Бани',title:'Баня "Классик"',price:'450 000₽',priceSub:'под ключ',
+      meta:[{i:'📐',t:'3×4 м'},{i:'🪵',t:'Брус'},{i:'📅',t:'21 день'}],
+      desc:'Уютная баня из профилированного бруса. Включает парную, мойку и комнату отдыха. Двускатная крыша, утепление 100мм. Фундамент на сваях включён.',
+      specs:[['Площадь','12 м²'],['Материал','Профилированный брус'],['Крыша','Двускатная, металлочерепица'],['Фундамент','Свайно-винтовой'],['Парная','Да, 4 м²'],['Мойка','Да, 3 м²'],['Электрика','Включена']]},
+    standart:{ico:'🏠',bg:'linear-gradient(135deg,#1a4a2e,#2d8a52)',badge:'Бани',title:'Баня "Стандарт"',price:'650 000₽',priceSub:'под ключ',
+      meta:[{i:'📐',t:'4×5 м'},{i:'🧱',t:'Каркас'},{i:'📅',t:'28 дней'}],
+      desc:'Каркасная баня с парной и мойкой. Обшивка вагонкой из липы, утепление 150мм. Включена печь и дымоход.',
+      specs:[['Площадь','20 м²'],['Материал','Каркас + вагонка'],['Парная','6 м²'],['Мойка','4 м²'],['Комната отдыха','10 м²'],['Печь','Включена'],['Дымоход','Включён']]},
+    comfort:{ico:'🏗️',bg:'linear-gradient(135deg,#1e3a5f,#3b82f6)',badge:'Дома',title:'Дом "Комфорт"',price:'1 200 000₽',priceSub:'от 45 дней',
+      meta:[{i:'📐',t:'8×8 м'},{i:'🏠',t:'2 этажа'},{i:'🛏️',t:'3 комнаты'}],
+      desc:'Двухэтажный каркасный дом с тремя спальнями. Первый этаж: кухня-гостиная, санузел. Второй: 3 спальни, балкон.',
+      specs:[['Площадь','128 м²'],['Этажей','2'],['Спальни','3'],['Санузлы','2'],['Кухня-гостиная','Да'],['Балкон','Да'],['Отопление','Электрическое']]},
+    premium:{ico:'🏠',bg:'linear-gradient(135deg,#4a1a2e,#8a2d52)',badge:'Бани',title:'Баня "Премиум"',price:'850 000₽',priceSub:'под ключ',
+      meta:[{i:'📐',t:'5×6 м'},{i:'🌲',t:'Кедр'},{i:'📅',t:'35 дней'}],
+      desc:'Премиальная баня из кедра с хаммамом и русской парной. Панорамное окно в комнате отдыха, полоки из абаша.',
+      specs:[['Площадь','30 м²'],['Материал','Кедр'],['Парная','Русская + хаммам'],['Комната отдыха','14 м²'],['Полоки','Абаш'],['Окна','Панорамное'],['Печь','Премиум, нержавейка']]},
+    besedka:{ico:'🪵',bg:'linear-gradient(135deg,#5f4a1e,#b68a3b)',badge:'Беседки',title:'Беседка "Уют"',price:'180 000₽',priceSub:'10 дней',
+      meta:[{i:'📐',t:'3×3 м'},{i:'🔥',t:'Мангал'},{i:'📅',t:'10 дней'}],
+      desc:'Открытая беседка с мангальной зоной. Деревянный каркас, двускатная крыша. Вместимость до 8 человек.',
+      specs:[['Площадь','9 м²'],['Тип','Открытая'],['Вместимость','8 человек'],['Мангал','Кирпичный, включён'],['Крыша','Двускатная'],['Пол','Террасная доска']]},
+    dom:{ico:'🏗️',bg:'linear-gradient(135deg,#1e3a5f,#3b82f6)',badge:'Дома',title:'Дом "Семейный"',price:'2 100 000₽',priceSub:'от 60 дней',
+      meta:[{i:'📐',t:'10×10 м'},{i:'🏠',t:'2 этажа'},{i:'🛏️',t:'5 комнат'}],
+      desc:'Просторный семейный дом с пятью комнатами. Тёплый контур, чистовая отделка, все коммуникации включены.',
+      specs:[['Площадь','200 м²'],['Этажей','2'],['Спальни','4 + кабинет'],['Санузлы','3'],['Гараж','Да, 1 авто'],['Терраса','Да, 18 м²'],['Отопление','Газовое']]}
+  },
+  tours:{
+    kazan:{ico:'🏛️',bg:'linear-gradient(135deg,#1e3a5f,#3b82f6)',badge:'Казань',title:'Казань — жемчужина Поволжья',price:'от 14 900₽',priceSub:'/ чел',
+      meta:[{i:'📅',t:'3–4 дня'},{i:'🚌',t:'Автобус'},{i:'🏨',t:'Отель 3★'}],
+      desc:'Откройте для себя столицу Татарстана! Кремль, мечеть Кул-Шариф, старо-татарская слобода, остров Свияжск и гастрономические открытия.',
+      specs:[['Длительность','3–4 дня'],['Транспорт','Автобус'],['Проживание','Отель 3★'],['Питание','Завтраки'],['Экскурсии','5 включено'],['Группа','12–20 чел'],['Выезд из','Челябинск']]},
+    spb:{ico:'🌊',bg:'linear-gradient(135deg,#3a1e5f,#7c3aed)',badge:'Санкт-Петербург',title:'Белые ночи Петербурга',price:'от 32 500₽',priceSub:'/ чел',
+      meta:[{i:'📅',t:'8–9 дней'},{i:'🚂',t:'Ж/д'},{i:'🏨',t:'Отель 4★'}],
+      desc:'Эрмитаж, Петергоф, Невский проспект, разводные мосты — всё самое лучшее Санкт-Петербурга в одном туре.',
+      specs:[['Длительность','8–9 дней'],['Транспорт','Ж/д + автобус'],['Проживание','Отель 4★'],['Питание','Полупансион'],['Экскурсии','10+ включено'],['Группа','10–16 чел']]},
+    dagestan:{ico:'🏔️',bg:'linear-gradient(135deg,#5f3a1e,#d97706)',badge:'Дагестан',title:'Горный Дагестан',price:'от 28 000₽',priceSub:'/ чел',
+      meta:[{i:'📅',t:'5–7 дней'},{i:'✈️',t:'Авиа'},{i:'🚙',t:'Джип-тур'}],
+      desc:'Сулакский каньон, Дербент, горные аулы, Бархан Сары-Кум. Незабываемая природа и кавказское гостеприимство.',
+      specs:[['Длительность','5–7 дней'],['Транспорт','Авиа + джип'],['Проживание','Гостевые дома'],['Питание','3-разовое'],['Экскурсии','7 включено'],['Группа','6–12 чел']]},
+    moscow:{ico:'🏛️',bg:'linear-gradient(135deg,#1a4a2e,#2d8a52)',badge:'Москва',title:'Москва — столица',price:'от 18 500₽',priceSub:'/ чел',
+      meta:[{i:'📅',t:'7 дней'},{i:'🚂',t:'Ж/д'},{i:'🏨',t:'Отель 3★'}],
+      desc:'Красная площадь, Третьяковская галерея, ВДНХ, Москва-Сити, речная прогулка. Полная программа за 7 дней.',
+      specs:[['Длительность','7 дней'],['Транспорт','Ж/д'],['Проживание','Отель 3★'],['Питание','Завтраки'],['Экскурсии','8 включено'],['Группа','12–20 чел']]},
+    altai:{ico:'⛰️',bg:'linear-gradient(135deg,#5f1e1e,#dc2626)',badge:'Алтай',title:'Алтай — сила природы',price:'от 35 000₽',priceSub:'/ чел',
+      meta:[{i:'📅',t:'10 дней'},{i:'✈️',t:'Авиа'},{i:'⛺',t:'Кемпинг'}],
+      desc:'Телецкое озеро, Чуйский тракт, Марс, перевал Кату-Ярык. Для тех, кто хочет настоящих приключений.',
+      specs:[['Длительность','10 дней'],['Транспорт','Авиа + внедорожник'],['Проживание','Кемпинг + турбазы'],['Питание','3-разовое'],['Сложность','Средняя'],['Группа','6–10 чел']]}
+  }
+};
+
+function showDetail(proj,item){
+  const d=DETAILS[proj]?.[item];if(!d)return;
+  detailOpen=true;
+  const el=document.getElementById(proj+'-detail');
+  el.innerHTML=`
+    <div class="sub-bar"><span class="sub-back" onclick="hideDetail()">‹</span><span class="sub-title">${d.title}</span></div>
+    <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch">
+      <div class="detail-hero" style="background:${d.bg}">${d.ico}</div>
+      <div class="detail-body">
+        <div class="detail-badge">${d.badge}</div>
+        <div class="detail-title">${d.title}</div>
+        <div class="detail-meta">${d.meta.map(m=>`<div class="detail-m">${m.i} ${m.t}</div>`).join('')}</div>
+        <div class="detail-price-row"><span class="detail-price">${d.price}</span><span class="detail-price-sub">${d.priceSub}</span></div>
+        <div class="detail-desc">${d.desc}</div>
+        <div class="detail-specs">${d.specs.map(s=>`<div class="spec-row"><span class="spec-label">${s[0]}</span><span class="spec-val">${s[1]}</span></div>`).join('')}</div>
+        <button class="btn btn-g btn-pill" onclick="this.textContent='✓ Заявка отправлена!';setTimeout(()=>this.textContent='Оставить заявку',2500)">Оставить заявку</button>
+      </div>
+    </div>`;
+  el.classList.add('on');
+}
+function hideDetail(){
+  document.querySelectorAll('.detail-view').forEach(d=>{d.classList.remove('on');d.innerHTML='';});
+  detailOpen=false;
+}
+
+// Interactive elements
 document.querySelectorAll('.fpill').forEach(p=>p.addEventListener('click',function(){this.closest('.filter-scroll').querySelectorAll('.fpill').forEach(x=>x.classList.remove('on'));this.classList.add('on');}));
 document.querySelectorAll('.ropt').forEach(r=>r.addEventListener('click',function(){this.closest('.radio-list').querySelectorAll('.ropt').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');}));
 document.querySelectorAll('.dchip').forEach(d=>d.addEventListener('click',function(){this.closest('.date-scroll').querySelectorAll('.dchip').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');}));
