@@ -80,9 +80,23 @@ body.tg-dark{--bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#252528;--t:#f2f2f7;--m:#98989f;--
 
 /* Services grid */
 .tasks-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px;}
-.task{background:var(--bg3);border:1px solid var(--b);border-radius:12px;padding:12px;display:flex;align-items:center;gap:8px;font-size:.78rem;font-weight:500;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.task{background:var(--bg3);border:1px solid var(--b);border-radius:12px;padding:12px;display:flex;align-items:center;gap:8px;font-size:.78rem;font-weight:500;transition:all .15s;-webkit-tap-highlight-color:transparent;cursor:pointer;}
 .task:active{background:var(--gl);border-color:var(--g);transform:scale(.97);}
 .task-ico{font-size:1.1rem;flex-shrink:0;}
+/* Task detail modal */
+.task-modal{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;pointer-events:none;opacity:0;transition:opacity .25s;}
+.task-modal.on{pointer-events:auto;opacity:1;}
+.task-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);}
+.task-sheet{position:relative;background:var(--bg);border-radius:var(--rx) var(--rx) 0 0;padding:24px 20px;width:100%;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);padding-bottom:max(24px,env(safe-area-inset-bottom));}
+.task-modal.on .task-sheet{transform:translateY(0);}
+.task-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 16px;}
+.ts-ico{font-size:2.2rem;margin-bottom:10px;}
+.ts-name{font-size:1.1rem;font-weight:800;margin-bottom:6px;}
+.ts-desc{font-size:.86rem;color:var(--m);line-height:1.7;margin-bottom:14px;}
+.ts-features{list-style:none;margin-bottom:18px;}
+.ts-features li{display:flex;gap:8px;align-items:flex-start;font-size:.84rem;padding:6px 0;border-bottom:1px solid var(--bg2);}
+.ts-features li:last-child{border:none;}
+.ts-check{color:var(--g);flex-shrink:0;font-weight:700;}
 
 /* Spheres */
 .sphere-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 16px 4px;-webkit-overflow-scrolling:touch;}
@@ -294,16 +308,22 @@ body.tg-dark{--bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#252528;--t:#f2f2f7;--m:#98989f;--
   <!-- Services -->
   <div class="pad" style="margin-top:20px"><div class="sec-lbl">Что мы делаем</div></div>
   <div class="tasks-grid">
-    <div class="task"><span class="task-ico">📊</span>Настройка воронок</div>
-    <div class="task"><span class="task-ico">📞</span>Телефония</div>
-    <div class="task"><span class="task-ico">💬</span>WhatsApp / Telegram</div>
-    <div class="task"><span class="task-ico">📋</span>Документооборот</div>
-    <div class="task"><span class="task-ico">🔀</span>Распределение заявок</div>
-    <div class="task"><span class="task-ico">📑</span>Выгрузка в таблицы</div>
-    <div class="task"><span class="task-ico">📱</span>Мини-аппы для TG</div>
-    <div class="task"><span class="task-ico">🤖</span>ИИ-ассистент</div>
-    <div class="task"><span class="task-ico">📈</span>Аналитика и отчёты</div>
-    <div class="task"><span class="task-ico">🛠️</span>Техподдержка</div>
+    <div class="task" data-task="funnels"><span class="task-ico">📊</span>Настройка воронок</div>
+    <div class="task" data-task="telephony"><span class="task-ico">📞</span>Телефония</div>
+    <div class="task" data-task="messengers"><span class="task-ico">💬</span>WhatsApp / Telegram</div>
+    <div class="task" data-task="docs"><span class="task-ico">📋</span>Документооборот</div>
+    <div class="task" data-task="leads"><span class="task-ico">🔀</span>Распределение заявок</div>
+    <div class="task" data-task="export"><span class="task-ico">📑</span>Выгрузка в таблицы</div>
+    <div class="task" data-task="miniapps"><span class="task-ico">📱</span>Мини-аппы для TG</div>
+    <div class="task" data-task="ai"><span class="task-ico">🤖</span>ИИ-ассистент</div>
+    <div class="task" data-task="analytics"><span class="task-ico">📈</span>Аналитика и отчёты</div>
+    <div class="task" data-task="support"><span class="task-ico">🛠️</span>Техподдержка</div>
+  </div>
+
+  <!-- Task modal (bottom sheet) -->
+  <div class="task-modal" id="task-modal" onclick="if(event.target===this||event.target.classList.contains('task-overlay'))closeTask()">
+    <div class="task-overlay"></div>
+    <div class="task-sheet" id="task-sheet"></div>
   </div>
 
   <!-- Spheres -->
@@ -745,6 +765,64 @@ function projTab(proj,tab,el){
   el.classList.add('on');
   page.querySelector('.sub-body').scrollTo(0,0);
 }
+
+// Task data
+const TASKS={
+  funnels:{ico:'📊',name:'Настройка воронок продаж',
+    desc:'Проектируем и настраиваем воронки в amoCRM под ваш бизнес-процесс. Убираем лишние этапы, автоматизируем переходы, настраиваем триггеры и задачи.',
+    features:['Аудит текущего процесса продаж','Проектирование этапов воронки','Автоматические задачи менеджерам','Триггеры при смене статуса','Настройка обязательных полей','Распределение по ответственным']},
+  telephony:{ico:'📞',name:'Подключение телефонии',
+    desc:'Интегрируем IP-телефонию с amoCRM. Звонки записываются, автоматически привязываются к сделкам, менеджеры видят карточку клиента при входящем.',
+    features:['Sipuni, UIS, Mango, Билайн','Запись всех разговоров','Автосоздание сделок при звонке','Карточка клиента при входящем','Аналитика по звонкам','Настройка IVR-меню']},
+  messengers:{ico:'💬',name:'Интеграция мессенджеров',
+    desc:'Подключаем WhatsApp, Telegram и другие мессенджеры напрямую в amoCRM. Менеджеры общаются с клиентами, не выходя из CRM.',
+    features:['WhatsApp через Wazzup / Radist.Online','WhatsApp Business API','Telegram-бот + личка','Шаблоны быстрых ответов','История переписки в сделке','Автоответы и рассылки']},
+  docs:{ico:'📋',name:'Документооборот',
+    desc:'Автоматическая генерация документов из amoCRM: договоры, счета, акты — заполняются данными из сделки за 1 клик.',
+    features:['Шаблоны документов (Word/PDF)','Автозаполнение из полей сделки','Электронная подпись','Отправка клиенту из CRM','Хранение в карточке сделки','Нумерация и учёт']},
+  leads:{ico:'🔀',name:'Распределение заявок',
+    desc:'Настраиваем автоматическое распределение входящих заявок между менеджерами: по очереди, по нагрузке, по компетенциям или географии.',
+    features:['Равномерное распределение','По нагрузке менеджера','По региону / нише клиента','Автоназначение задач','Уведомления о новых заявках','Контроль SLA по скорости ответа']},
+  export:{ico:'📑',name:'Выгрузка в таблицы',
+    desc:'Настраиваем автоматическую выгрузку данных из amoCRM в Google Sheets, Excel, BI-системы для сквозной аналитики и отчётности.',
+    features:['Google Sheets в реальном времени','Регулярные отчёты на почту','Подключение к Power BI / Metabase','Выгрузка по API','Кастомные дашборды','Сводные таблицы по воронкам']},
+  miniapps:{ico:'📱',name:'Мини-аппы для Telegram',
+    desc:'Разрабатываем Telegram Mini Apps: каталоги, записи, программы лояльности, магазины — с интеграцией в amoCRM.',
+    features:['Каталог товаров и услуг','Онлайн-запись','Программа лояльности / бонусы','Партнёрская программа','Форма заявки в CRM','Личный кабинет клиента']},
+  ai:{ico:'🤖',name:'ИИ-ассистент в CRM',
+    desc:'Внедряем GPT-ассистента внутрь amoCRM: автоответы клиентам, суммаризация звонков, подсказки менеджерам, квалификация лидов.',
+    features:['Автоответы в чатах','Суммаризация звонков и переписки','Квалификация лидов по скрипту','Подсказки менеджеру в сделке','Генерация КП и писем','Обучение на ваших данных']},
+  analytics:{ico:'📈',name:'Аналитика и отчёты',
+    desc:'Настраиваем дашборды и отчёты: конверсия воронок, эффективность менеджеров, источники заявок, LTV, ROI рекламы.',
+    features:['Дашборд руководителя','Конверсия по этапам воронки','Рейтинг менеджеров','Аналитика по источникам','Прогноз выручки','Еженедельные отчёты на почту']},
+  support:{ico:'🛠️',name:'Техническое сопровождение',
+    desc:'Берём amoCRM на постоянное обслуживание: доработки, исправления, обучение новых сотрудников, консультации по процессам.',
+    features:['Выделенный менеджер','Доработки по запросу','Исправление ошибок','Обучение новых сотрудников','Консультации по процессам','SLA от 1 часа']}
+};
+
+function openTask(key){
+  const t=TASKS[key];if(!t)return;
+  haptic('medium');
+  document.getElementById('task-sheet').innerHTML=`
+    <div class="task-handle"></div>
+    <div class="ts-ico">${t.ico}</div>
+    <div class="ts-name">${t.name}</div>
+    <div class="ts-desc">${t.desc}</div>
+    <ul class="ts-features">${t.features.map(f=>`<li><span class="ts-check">✓</span>${f}</li>`).join('')}</ul>
+    <a href="https://t.me/lenar_yus" style="text-decoration:none" target="_blank">
+      <button class="btn btn-g btn-pill">💬 Обсудить задачу</button>
+    </a>
+    <div style="height:6px"></div>
+    <button class="btn btn-o btn-pill" onclick="closeTask()">Закрыть</button>`;
+  document.getElementById('task-modal').classList.add('on');
+}
+function closeTask(){
+  haptic('light');
+  document.getElementById('task-modal').classList.remove('on');
+}
+document.querySelectorAll('.task[data-task]').forEach(t=>{
+  t.addEventListener('click',()=>openTask(t.dataset.task));
+});
 
 // Detail data
 const DETAILS={
